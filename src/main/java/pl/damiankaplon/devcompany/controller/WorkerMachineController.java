@@ -1,4 +1,4 @@
 package pl.damiankaplon.devcompany.controller;
 
-public class ManagerController {
+public class WorkerMachineController {
 }

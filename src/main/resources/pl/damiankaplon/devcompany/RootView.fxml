@@ -5,13 +5,19 @@
 <?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.layout.BorderPane?>
 
-<BorderPane id="menu-bar" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" stylesheets="@static/css/bootstrap.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pl.damiankaplon.devcompany.controller.RootController">
+<BorderPane id="menu-bar" fx:id="borderPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" stylesheets="@static/css/bootstrap.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pl.damiankaplon.devcompany.controller.RootController">
     <top>
         <MenuBar stylesheets="@static/css/bootstrap.css" BorderPane.alignment="CENTER">
             <menus>
-                <Menu mnemonicParsing="false" text="Clients">
+            <Menu mnemonicParsing="false" text="Home">
+              <items>
+                <MenuItem mnemonicParsing="false" onAction="#switchToHomeView" text="Home" />
+              </items>
+            </Menu>
+                <Menu mnemonicParsing="false" text="Manage">
                     <items>
-                        <MenuItem mnemonicParsing="false" onAction="#switchToManagerView" text="Manage" />
+                        <MenuItem mnemonicParsing="false" onAction="#switchToManagerView" text="Clients" />
+                  <MenuItem mnemonicParsing="false" onAction="#switchToWorkersMachinesView" text="Workers/Machines" />
                     </items>
                 </Menu>
             </menus>
