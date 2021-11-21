@@ -2,6 +2,7 @@ module pl.damiankaplon.devcompany {
     requires javafx.controls;
     requires javafx.fxml;
     requires javafx.web;
+    requires java.naming;
 
     requires org.controlsfx.controls;
     requires com.dlsc.formsfx;
@@ -10,6 +11,9 @@ module pl.damiankaplon.devcompany {
     requires org.kordamp.bootstrapfx.core;
     requires eu.hansolo.tilesfx;
     requires lombok;
+    requires org.postgresql.jdbc;
+    requires org.hibernate.orm.core;
+    requires org.hibernate.commons.annotations;
 
     opens pl.damiankaplon.devcompany to javafx.fxml;
     exports pl.damiankaplon.devcompany;

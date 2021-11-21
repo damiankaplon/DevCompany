@@ -16,7 +16,7 @@
             </Menu>
                 <Menu mnemonicParsing="false" text="Manage">
                     <items>
-                        <MenuItem mnemonicParsing="false" onAction="#switchToManagerView" text="Clients" />
+                        <MenuItem mnemonicParsing="false" onAction="#switchToClientView" text="Clients" />
                   <MenuItem mnemonicParsing="false" onAction="#switchToWorkersMachinesView" text="Workers/Machines" />
                     </items>
                 </Menu>

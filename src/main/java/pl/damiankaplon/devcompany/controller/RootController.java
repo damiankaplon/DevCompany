@@ -5,6 +5,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.layout.BorderPane;
 import lombok.*;
 import pl.damiankaplon.devcompany.MainApplication;
+import pl.damiankaplon.devcompany.service.ClientService;
 
 import java.io.IOException;
 
@@ -16,8 +17,9 @@ public class RootController {
     @FXML private BorderPane borderPane;
 
     @FXML
-    public void switchToManagerView() throws IOException {
+    public void switchToClientView() throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(MainApplication.class.getResource("ClientsView.fxml"));
+        new ClientService().testSaveData();
         this.borderPane.setCenter(fxmlLoader.load());
     }
 
