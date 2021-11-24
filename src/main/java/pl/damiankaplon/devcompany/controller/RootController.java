@@ -5,7 +5,6 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.layout.BorderPane;
 import lombok.*;
 import pl.damiankaplon.devcompany.MainApplication;
-import pl.damiankaplon.devcompany.service.ClientService;
 
 import java.io.IOException;
 
@@ -14,24 +13,23 @@ import java.io.IOException;
 public class RootController {
     //private Stage stage;
     //private Scene scene;
-    @FXML private BorderPane borderPane;
+    @FXML private BorderPane root;
 
     @FXML
     public void switchToClientView() throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(MainApplication.class.getResource("ClientsView.fxml"));
-        new ClientService().testSaveData();
-        this.borderPane.setCenter(fxmlLoader.load());
+        this.root.setCenter(fxmlLoader.load());
     }
 
     @FXML
     public void switchToHomeView() throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(MainApplication.class.getResource("HomeView.fxml"));
-        this.borderPane.setCenter(fxmlLoader.load());
+        this.root.setCenter(fxmlLoader.load());
     }
 
     @FXML
     public void switchToWorkersMachinesView() throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(MainApplication.class.getResource("WorkersMachinesView.fxml"));
-        this.borderPane.setCenter(fxmlLoader.load());
+        this.root.setCenter(fxmlLoader.load());
     }
 }

@@ -21,6 +21,7 @@ module pl.damiankaplon.devcompany {
     opens pl.damiankaplon.devcompany to javafx.fxml;
     opens pl.damiankaplon.devcompany.model to org.hibernate.orm.core;
     exports pl.damiankaplon.devcompany;
+    exports pl.damiankaplon.devcompany.model;
     exports pl.damiankaplon.devcompany.controller;
     opens pl.damiankaplon.devcompany.controller to javafx.fxml;
 }

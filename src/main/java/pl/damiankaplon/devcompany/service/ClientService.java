@@ -32,9 +32,24 @@ public class ClientService {
     public void testSaveData(){
         Session session = this.sessionFactory.openSession();
         session.beginTransaction();
-        session.save(new Client("Natalia", "Kaplon", "99010604291"));
+        session.save(new Client("Random", "Random", "1234567890-"));
         session.getTransaction().commit();
         session.close();
     }
 
+    public void saveClient(Client client) {
+        Session session = this.sessionFactory.openSession();
+        session.beginTransaction();
+        session.save(client);
+        session.getTransaction().commit();
+        session.close();
+    }
+
+    public void removeClient(Client client) {
+        Session session = this.sessionFactory.openSession();
+        session.beginTransaction();
+        session.remove(client);
+        session.getTransaction().commit();
+        session.close();
+    }
 }
