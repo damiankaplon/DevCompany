@@ -30,7 +30,7 @@
 
         <!-- Drop and re-create the database schema on startup -->
 
-        <mapping resource="pl/damiankaplon/devcompany/model/Client.hbm.xml"/>
+        <mapping class="pl.damiankaplon.devcompany.model.Client"/>
 
     </session-factory>
 
