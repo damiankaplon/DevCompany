@@ -13,10 +13,9 @@
    <children>
       <ButtonBar fx:id="buttonbar" layoutY="20.0" prefHeight="40.0" prefWidth="600.0" AnchorPane.leftAnchor="0.0">
         <buttons>
-            <Button id="button.success" fx:id="search" mnemonicParsing="false" stylesheets="@static/css/bootstrap.css" text="Search" />
+            <Button id="button.success" fx:id="search" mnemonicParsing="false" onAction="#getClient" stylesheets="@static/css/bootstrap.css" text="Search" />
           <Button fx:id="add" mnemonicParsing="false" onAction="#addClient" text="Add" />
             <Button fx:id="update" mnemonicParsing="false" text="Update" />
-            <Button fx:id="delete" mnemonicParsing="false" onAction="#removeClient" text="Delete" />
         </buttons>
          <cursor>
             <Cursor fx:constant="DEFAULT" />

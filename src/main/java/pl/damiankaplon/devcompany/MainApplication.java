@@ -6,6 +6,7 @@ import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import pl.damiankaplon.devcompany.controller.RootController;
+import pl.damiankaplon.devcompany.dbutil.DbUtil;
 
 import java.io.IOException;
 
@@ -13,6 +14,7 @@ public class MainApplication extends Application {
 
     @Override
     public void start(Stage stage) throws IOException {
+        new DbUtil();
         FXMLLoader fxmlLoader1 = new FXMLLoader(MainApplication.class.getResource("RootView.fxml"));
         FXMLLoader fxmlLoader2 = new FXMLLoader(MainApplication.class.getResource("HomeView.fxml"));
         BorderPane root = fxmlLoader1.load();
