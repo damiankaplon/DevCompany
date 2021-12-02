@@ -28,8 +28,8 @@ public class RootController {
     }
 
     @FXML
-    public void switchToWorkersMachinesView() throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(MainApplication.class.getResource("WorkersMachinesView.fxml"));
+    public void switchToSaleView() throws IOException {
+        FXMLLoader fxmlLoader = new FXMLLoader(MainApplication.class.getResource("SaleView.fxml"));
         this.root.setCenter(fxmlLoader.load());
     }
 }

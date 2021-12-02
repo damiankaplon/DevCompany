@@ -5,7 +5,6 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
-import pl.damiankaplon.devcompany.controller.RootController;
 import pl.damiankaplon.devcompany.dbutil.DbUtil;
 
 import java.io.IOException;

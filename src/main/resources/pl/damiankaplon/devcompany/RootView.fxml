@@ -19,6 +19,11 @@
                         <MenuItem mnemonicParsing="false" onAction="#switchToClientView" text="Manage" />
                     </items>
                 </Menu>
+            <Menu mnemonicParsing="false" text="Sales">
+              <items>
+                <MenuItem mnemonicParsing="false" onAction="#switchToSaleView" text="Manage" />
+              </items>
+            </Menu>
             </menus>
         </MenuBar>
     </top>
