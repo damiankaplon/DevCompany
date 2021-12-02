@@ -6,9 +6,11 @@ import javafx.scene.control.TextField;
 import pl.damiankaplon.devcompany.dbutil.DbUtil;
 import pl.damiankaplon.devcompany.model.Client;
 import pl.damiankaplon.devcompany.service.ClientService;
-import pl.damiankaplon.devcompany.service.exceptions.NoClientsFound;
-import pl.damiankaplon.devcompany.service.exceptions.NotSpecifiedAllArguments;
-import pl.damiankaplon.devcompany.service.exceptions.PeselAlreadyInDb;
+import pl.damiankaplon.devcompany.service.exception.ManySamePeselsInDb;
+import pl.damiankaplon.devcompany.service.exception.NoClientsFound;
+import pl.damiankaplon.devcompany.service.exception.NotSpecifiedAllArguments;
+import pl.damiankaplon.devcompany.service.exception.PeselAlreadyInDb;
+import pl.damiankaplon.devcompany.service.exception.NotSpecifiedReqArgs;
 
 import java.util.List;
 
@@ -40,6 +42,16 @@ public class ClientController{
             clients.forEach(c -> this.clientTextArea.appendText(c.getName() +" " +c.getSurname()+" "+ c.getPesel()+"\n"));
         } catch (NoClientsFound e) {
             this.clientTextArea.appendText("No clients were found \n");
+        }
+    }
+    @FXML
+    public void updateClient() {
+        try {
+            service.updateClient(new Client(name.getText(), surname.getText(), pesel.getText()));
+        } catch (ManySamePeselsInDb e) {
+            this.clientTextArea.appendText("Many Clients with same pesel in database. Call IT!\n");
+        } catch (NotSpecifiedReqArgs e) {
+            this.clientTextArea.appendText("You have to specify Pesel to identify client you want to update\n");
         }
     }
 }

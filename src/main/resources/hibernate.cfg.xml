@@ -31,6 +31,9 @@
         <!-- Drop and re-create the database schema on startup -->
 
         <mapping class="pl.damiankaplon.devcompany.model.Client"/>
+        <mapping class="pl.damiankaplon.devcompany.model.Flat"/>
+        <mapping class="pl.damiankaplon.devcompany.model.Sale"/>
+        <mapping class="pl.damiankaplon.devcompany.model.Building"/>
 
     </session-factory>
 

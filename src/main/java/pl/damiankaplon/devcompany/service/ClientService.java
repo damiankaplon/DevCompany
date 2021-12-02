@@ -1,14 +1,12 @@
 package pl.damiankaplon.devcompany.service;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.hibernate.boot.MetadataSources;
-import org.hibernate.boot.registry.StandardServiceRegistry;
-import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
-import pl.damiankaplon.devcompany.dbutil.DbUtil;
 import pl.damiankaplon.devcompany.model.Client;
-import pl.damiankaplon.devcompany.service.exceptions.NoClientsFound;
-import pl.damiankaplon.devcompany.service.exceptions.NotSpecifiedAllArguments;
-import pl.damiankaplon.devcompany.service.exceptions.PeselAlreadyInDb;
+import pl.damiankaplon.devcompany.service.exception.ManySamePeselsInDb;
+import pl.damiankaplon.devcompany.service.exception.NoClientsFound;
+import pl.damiankaplon.devcompany.service.exception.NotSpecifiedAllArguments;
+import pl.damiankaplon.devcompany.service.exception.PeselAlreadyInDb;
+import pl.damiankaplon.devcompany.service.exception.NotSpecifiedReqArgs;
 
 import javax.persistence.Query;
 import java.util.List;
@@ -26,7 +24,7 @@ public class ClientService {
         if(client.getName().equals("") || client.getSurname().equals("") || client.getPesel().equals("")){
             throw new NotSpecifiedAllArguments();
         }
-        Session session = this.sessionFactory.openSession();
+        Session session = openSession();
         Query q = session.createQuery("from Client where pesel='"+client.getPesel()+"'");
         List<Client> clients = q.getResultList();
         Optional<Client> optionalClient = clients.stream().findAny();
@@ -37,35 +35,6 @@ public class ClientService {
         session.close();
     }
 
-    public List<Client> getClientByName(Client client) {
-        Session session = this.sessionFactory.openSession();
-        session.beginTransaction();
-        Query q = session.createQuery("from Client where name='"+client.getName()+"'");
-        List<Client> clients = q.getResultList();
-        session.getTransaction().commit();
-        session.close();
-        return clients;
-    }
-
-    public List<Client> getClientBySurname(Client client) {
-        Session session = this.sessionFactory.openSession();
-        session.beginTransaction();
-        Query q = session.createQuery("from Client where surname='"+client.getSurname()+"'");
-        List<Client> clients = q.getResultList();
-        session.getTransaction().commit();
-        session.close();
-        return clients;
-    }
-
-    public List<Client> getClientByPesel(Client client) {
-        Session session = this.sessionFactory.openSession();
-        session.beginTransaction();
-        Query q = session.createQuery("from Client where pesel='"+client.getPesel()+"'");
-        List<Client> clients = q.getResultList();
-        session.getTransaction().commit();
-        session.close();
-        return clients;
-    }
     public List<Client> getClientByAllArgs(Client client) throws NoClientsFound {
         Session session = this.sessionFactory.openSession();
         session.beginTransaction();
@@ -76,6 +45,27 @@ public class ClientService {
         session.getTransaction().commit();
         session.close();
         return clients;
+    }
+
+    public void updateClient(Client client) throws ManySamePeselsInDb, NotSpecifiedReqArgs {
+        if (client.getPesel().isBlank() || client.getPesel().isBlank()) throw new NotSpecifiedReqArgs();
+
+        Session fetchSession = openSession();
+        Query q = fetchSession.createQuery("from Client where pesel='"+client.getPesel()+"'");
+        List<Client> clients = q.getResultList();
+        fetchSession.close();
+
+        if(clients.size() > 1) throw new ManySamePeselsInDb();
+
+        Session updateSession = openSession();
+        updateSession.beginTransaction();
+        updateSession.update(new Client(clients.get(0).getId(), client.getName(), client.getSurname(), client.getPesel()));
+        updateSession.getTransaction().commit();
+        updateSession.close();
+    }
+
+    private Session openSession(){
+        return this.sessionFactory.openSession();
     }
 
 }

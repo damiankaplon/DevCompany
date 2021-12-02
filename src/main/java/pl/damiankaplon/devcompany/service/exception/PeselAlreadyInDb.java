@@ -1,4 +1,4 @@
-package pl.damiankaplon.devcompany.service.exceptions;
+package pl.damiankaplon.devcompany.service.exception;
 
 import org.hibernate.Session;
 
