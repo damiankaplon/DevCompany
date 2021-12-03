@@ -5,6 +5,7 @@ import org.hibernate.SessionFactory;
 import pl.damiankaplon.devcompany.model.Client;
 import pl.damiankaplon.devcompany.model.Sale;
 
+import javax.persistence.NoResultException;
 import javax.persistence.Query;
 import java.util.List;
 
@@ -12,7 +13,7 @@ public class SaleService {
 
     private final SessionFactory sessionFactory;
 
-    public SaleService(SessionFactory sessionFactory){
+    public SaleService(SessionFactory sessionFactory) throws NoResultException {
         this.sessionFactory = sessionFactory;
     }
     public Sale getSaleByIdentity(String saleNr) {

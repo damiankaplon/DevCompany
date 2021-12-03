@@ -54,7 +54,7 @@
         <content>
           <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="200.0" prefWidth="200.0">
                <children>
-                  <TextArea editable="false" prefHeight="232.0" prefWidth="826.0" />
+                  <TextArea fx:id="saleTextArea" editable="false" prefHeight="232.0" prefWidth="826.0" />
                </children>
             </AnchorPane>
         </content>
