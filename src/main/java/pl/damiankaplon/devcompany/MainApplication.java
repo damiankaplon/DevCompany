@@ -11,9 +11,10 @@ import java.io.IOException;
 
 public class MainApplication extends Application {
 
+    static { DbUtil.initialize();}
+
     @Override
     public void start(Stage stage) throws IOException {
-        new DbUtil();
         FXMLLoader fxmlLoader1 = new FXMLLoader(MainApplication.class.getResource("RootView.fxml"));
         FXMLLoader fxmlLoader2 = new FXMLLoader(MainApplication.class.getResource("HomeView.fxml"));
         BorderPane root = fxmlLoader1.load();

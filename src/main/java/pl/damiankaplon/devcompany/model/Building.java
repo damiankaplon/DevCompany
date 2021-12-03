@@ -30,5 +30,5 @@ public class Building {
 
     @OneToMany(mappedBy = "building") private List<Sale> sale;
 
-    @OneToMany(mappedBy = "building") private List<Flat> flats;
+   @OneToMany(mappedBy = "building") private List<Flat> flats;
 }

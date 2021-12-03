@@ -23,5 +23,7 @@ module pl.damiankaplon.devcompany {
     exports pl.damiankaplon.devcompany;
     exports pl.damiankaplon.devcompany.model;
     exports pl.damiankaplon.devcompany.controller;
+    exports pl.damiankaplon.devcompany.dbutil;
+    exports pl.damiankaplon.devcompany.service;
     opens pl.damiankaplon.devcompany.controller to javafx.fxml;
 }

@@ -11,8 +11,7 @@ import java.io.IOException;
 @Getter
 @Setter
 public class RootController {
-    //private Stage stage;
-    //private Scene scene;
+
     @FXML private BorderPane root;
 
     @FXML

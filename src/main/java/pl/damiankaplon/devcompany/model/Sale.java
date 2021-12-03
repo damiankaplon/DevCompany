@@ -34,4 +34,6 @@ public class Sale {
     @Column(name = "sale_assign_date") private Date signDate;
 
     @Column(name = "sale_payment_date") private Date paymentDate;
+
+    @Column(name = "sale_identity") private String identity;
 }

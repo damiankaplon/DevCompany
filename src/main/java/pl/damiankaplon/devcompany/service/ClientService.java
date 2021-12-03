@@ -24,7 +24,7 @@ public class ClientService {
         if(client.getName().equals("") || client.getSurname().equals("") || client.getPesel().equals("")){
             throw new NotSpecifiedAllArguments();
         }
-        Session session = openSession();
+        Session session = this.sessionFactory.openSession();
         Query q = session.createQuery("from Client where pesel='"+client.getPesel()+"'");
         List<Client> clients = q.getResultList();
         Optional<Client> optionalClient = clients.stream().findAny();
@@ -50,22 +50,17 @@ public class ClientService {
     public void updateClient(Client client) throws ManySamePeselsInDb, NotSpecifiedReqArgs {
         if (client.getPesel().isBlank() || client.getPesel().isBlank()) throw new NotSpecifiedReqArgs();
 
-        Session fetchSession = openSession();
+        Session fetchSession = this.sessionFactory.openSession();
         Query q = fetchSession.createQuery("from Client where pesel='"+client.getPesel()+"'");
         List<Client> clients = q.getResultList();
         fetchSession.close();
 
         if(clients.size() > 1) throw new ManySamePeselsInDb();
 
-        Session updateSession = openSession();
+        Session updateSession = this.sessionFactory.openSession();
         updateSession.beginTransaction();
         updateSession.update(new Client(clients.get(0).getId(), client.getName(), client.getSurname(), client.getPesel()));
         updateSession.getTransaction().commit();
         updateSession.close();
     }
-
-    private Session openSession(){
-        return this.sessionFactory.openSession();
-    }
-
 }
