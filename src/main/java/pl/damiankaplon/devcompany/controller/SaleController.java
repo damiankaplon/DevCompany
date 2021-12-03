@@ -17,7 +17,7 @@ public class SaleController {
     SaleService saleService = new SaleService(DbUtil.sessionFactory);
 
     @FXML
-    TextField saleNrField, nameField, surnameField, cityField, addressField, postalField, streetField, peselField;
+    TextField saleNrField, nameField, surnameField, peselField, cityField, addressField, postalField, streetField, apartmentNr;
 
     @FXML
     public void searchSale() {
@@ -30,6 +30,6 @@ public class SaleController {
         this.postalField.setText(sale.getBuilding().getPostal());
         this.streetField.setText(sale.getBuilding().getStreet());
         this.addressField.setText(String.valueOf(sale.getBuilding().getAddress()));
-
+        this.apartmentNr.setText(String.valueOf(sale.getFlat().get(0).getFlatNumber()));
     }
 }

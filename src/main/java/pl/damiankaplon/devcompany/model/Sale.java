@@ -18,7 +18,7 @@ public class Sale {
     @Column(name = "sale_id", nullable = false)
     private long id;
 
-    @OneToMany(mappedBy = "sale")
+    @OneToMany(mappedBy = "sale", fetch = FetchType.EAGER)
     private List<Flat> flat;
 
     @ManyToOne
