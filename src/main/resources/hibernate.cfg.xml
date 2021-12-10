@@ -28,8 +28,6 @@
         <!-- Echo all executed SQL to stdout -->
         <property name="show_sql">true</property>
 
-        <!-- Drop and re-create the database schema on startup -->
-
         <mapping class="pl.damiankaplon.devcompany.model.Client"/>
         <mapping class="pl.damiankaplon.devcompany.model.Flat"/>
         <mapping class="pl.damiankaplon.devcompany.model.Sale"/>

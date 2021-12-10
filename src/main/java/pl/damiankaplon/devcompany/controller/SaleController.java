@@ -7,8 +7,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import pl.damiankaplon.devcompany.dbutil.DbUtil;
-import pl.damiankaplon.devcompany.model.Building;
-import pl.damiankaplon.devcompany.model.Client;
 import pl.damiankaplon.devcompany.model.Sale;
 import pl.damiankaplon.devcompany.service.SaleService;
 
@@ -22,24 +20,28 @@ public class SaleController {
     SaleService saleService = new SaleService(DbUtil.sessionFactory);
 
     @FXML
-    TextField saleNrField, nameField, surnameField, peselField, cityField, addressField, postalField, streetField, apartmentNr,
-    value, signDate, paymentDate;
+    TextField saleNrFX, nameFX, surnameFX, peselFX, cityFX, addressFX, postalFX, streetFX, apartmentNrFX,
+            valueFX, signDateFX, paymentDateFX;
     @FXML
     TextArea saleTextArea;
 
     @FXML
     public void searchSale() {
         try{
-            Sale sale = saleService.getSaleByIdentity(saleNrField.getText());
-            this.saleNrField.setText(sale.getIdentity());
-            this.nameField.setText(sale.getClient().getName());
-            this.surnameField.setText(sale.getClient().getSurname());
-            this.peselField.setText(sale.getClient().getPesel());
-            this.cityField.setText(sale.getBuilding().getCity());
-            this.postalField.setText(sale.getBuilding().getPostal());
-            this.streetField.setText(sale.getBuilding().getStreet());
-            this.addressField.setText(String.valueOf(sale.getBuilding().getAddress()));
-            this.apartmentNr.setText(String.valueOf(sale.getFlat().get(0).getFlatNumber()));
+            Sale sale = saleService.getSaleByIdentity(saleNrFX.getText());
+
+            this.saleNrFX.setText(sale.getIdentity());
+            this.nameFX.setText(sale.getClient().getName());
+            this.surnameFX.setText(sale.getClient().getSurname());
+            this.peselFX.setText(sale.getClient().getPesel());
+            this.cityFX.setText(sale.getBuilding().getCity());
+            this.postalFX.setText(sale.getBuilding().getPostal());
+            this.streetFX.setText(sale.getBuilding().getStreet());
+            this.addressFX.setText(String.valueOf(sale.getBuilding().getAddress()));
+            this.apartmentNrFX.setText(String.valueOf(sale.getFlat().get(0).getFlatNumber()));
+            this.valueFX.setText(String.valueOf(sale.getSaleValue()));
+            this.signDateFX.setText(String.valueOf(sale.getSignDate()));
+            this.paymentDateFX.setText(String.valueOf(sale.getPaymentDate()));
         }
         catch(NoResultException ignored){
             this.saleTextArea.appendText(("No sales were found for certain sale identity\n"));
