@@ -5,6 +5,8 @@
 <?import javafx.scene.control.ButtonBar?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
@@ -21,15 +23,26 @@
             <Cursor fx:constant="DEFAULT" />
          </cursor>
       </ButtonBar>
-      <TextField fx:id="name" layoutX="409.0" layoutY="165.0" promptText="Name" />
-      <TextField fx:id="surname" layoutX="409.0" layoutY="195.0" promptText="Surname" />
-      <TextField fx:id="pesel" layoutX="409.0" layoutY="226.0" promptText="XXXXXXXXXXX" />
-      <Label layoutX="339.0" layoutY="169.0" text="Name" />
-      <Label layoutX="341.0" layoutY="199.0" text="Surname" />
-      <Label layoutX="341.0" layoutY="230.0" text="PESEL" />
-      <ScrollPane layoutX="298.0" layoutY="295.0" prefHeight="130.0" prefWidth="579.0" stylesheets="@static/css/bootstrap.css">
+      <TextField fx:id="name" layoutX="757.0" layoutY="245.0" promptText="Name" />
+      <TextField fx:id="surname" layoutX="757.0" layoutY="275.0" promptText="Surname" />
+      <TextField fx:id="pesel" layoutX="757.0" layoutY="306.0" promptText="XXXXXXXXXXX" />
+      <Label layoutX="687.0" layoutY="249.0" text="Name" />
+      <Label layoutX="689.0" layoutY="279.0" text="Surname" />
+      <Label layoutX="689.0" layoutY="310.0" text="PESEL" />
+      <ScrollPane layoutX="687.0" layoutY="77.0" prefHeight="149.0" prefWidth="579.0" stylesheets="@static/css/bootstrap.css">
          <content>
-            <TextArea fx:id="clientTextArea" editable="false" prefHeight="128.0" prefWidth="577.0" stylesheets="@static/css/bootstrap.css" />
+            <TextArea fx:id="clientTextArea" editable="false" prefHeight="147.0" prefWidth="577.0" stylesheets="@static/css/bootstrap.css" />
+         </content>
+      </ScrollPane>
+      <ScrollPane layoutX="14.0" layoutY="77.0" prefHeight="524.0" prefWidth="503.0">
+         <content>
+            <TableView fx:id="clientsTable" prefHeight="522.0" prefWidth="501.0">
+              <columns>
+                <TableColumn fx:id="nameColumn" prefWidth="173.0" text="Name" />
+                <TableColumn fx:id="surnameColumn" prefWidth="172.0" text="Surname" />
+                  <TableColumn fx:id="peselColumn" prefWidth="156.0" text="Pesel" />
+              </columns>
+            </TableView>
          </content>
       </ScrollPane>
    </children>

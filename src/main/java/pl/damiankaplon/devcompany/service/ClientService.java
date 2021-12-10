@@ -8,13 +8,19 @@ import pl.damiankaplon.devcompany.service.exception.NotSpecifiedAllArguments;
 import pl.damiankaplon.devcompany.service.exception.PeselAlreadyInDb;
 import pl.damiankaplon.devcompany.service.exception.NotSpecifiedReqArgs;
 
-import javax.persistence.Query;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
 import java.util.List;
 import java.util.Optional;
 
 public class ClientService {
 
     private final SessionFactory sessionFactory;
+    private Session session;
+    private CriteriaBuilder cb;
+    private CriteriaQuery<Client> cq;
+    private Root<Client> root;
 
     public ClientService(SessionFactory sessionFactory){
         this.sessionFactory = sessionFactory;
@@ -24,43 +30,67 @@ public class ClientService {
         if(client.getName().equals("") || client.getSurname().equals("") || client.getPesel().equals("")){
             throw new NotSpecifiedAllArguments();
         }
-        Session session = this.sessionFactory.openSession();
-        Query q = session.createQuery("from Client where pesel='"+client.getPesel()+"'");
-        List<Client> clients = q.getResultList();
+
+        this.prepareCriteria();
+        this.cq.select(root).where(cb.equal(root.get("pesel"), client.getPesel()));
+
+        List<Client> clients = this.session.createQuery(cq).getResultList();
+
         Optional<Client> optionalClient = clients.stream().findAny();
-        if(optionalClient.isPresent()) throw new PeselAlreadyInDb(session);
-        session.beginTransaction();
-        session.save(client);
-        session.getTransaction().commit();
-        session.close();
+        if(optionalClient.isPresent()) throw new PeselAlreadyInDb(this.session);
+        this.session.beginTransaction();
+        this.session.save(client);
+        this.session.getTransaction().commit();
+        this.session.close();
     }
 
     public List<Client> getClientByAllArgs(Client client) throws NoClientsFound {
-        Session session = this.sessionFactory.openSession();
-        session.beginTransaction();
-        Query q = session.createQuery("from Client where name='"+client.getName()+"' and surname='"+client.getSurname()
-        +"' or pesel='"+client.getPesel()+"'");
-        List<Client> clients = q.getResultList();
-        if(clients.isEmpty()) throw new NoClientsFound(session);
-        session.getTransaction().commit();
-        session.close();
+        this.prepareCriteria();
+        this.cq.select(root).where(cb.or((cb.equal(root.get("surname"), client.getSurname())),
+                (cb.equal(root.get("pesel"), client.getPesel()))));
+
+        final List<Client> clients = this.session.createQuery(cq).getResultList();
+
+        if (clients.isEmpty()) throw new NoClientsFound(this.session);
+
+        this.session.close();
         return clients;
     }
 
     public void updateClient(Client client) throws ManySamePeselsInDb, NotSpecifiedReqArgs {
         if (client.getPesel().isBlank() || client.getPesel().isBlank()) throw new NotSpecifiedReqArgs();
 
-        Session fetchSession = this.sessionFactory.openSession();
-        Query q = fetchSession.createQuery("from Client where pesel='"+client.getPesel()+"'");
-        List<Client> clients = q.getResultList();
-        fetchSession.close();
+        this.prepareCriteria();
+
+        this.cq.select(root).where(cb.or((cb.equal(root.get("surname"), client.getSurname())),
+                (cb.equal(root.get("pesel"), client.getPesel()))));
+
+        List<Client> clients = this.session.createQuery(this.cq).getResultList();
+        this.session.close();
 
         if(clients.size() > 1) throw new ManySamePeselsInDb();
+        this.update(new Client(clients.get(0).getId(), client.getName(), client.getSurname(), client.getPesel()));
+    }
 
-        Session updateSession = this.sessionFactory.openSession();
-        updateSession.beginTransaction();
-        updateSession.update(new Client(clients.get(0).getId(), client.getName(), client.getSurname(), client.getPesel()));
-        updateSession.getTransaction().commit();
-        updateSession.close();
+    public List<Client> getAllClients() {
+        this.prepareCriteria();
+        this.cq.select(this.root);
+
+        return this.session.createQuery(this.cq).getResultList();
+    }
+
+    private void prepareCriteria() {
+        this.session = this.sessionFactory.openSession();
+        this.cb = this.session.getCriteriaBuilder();
+        this.cq = this.cb.createQuery(Client.class);
+        this.root = this.cq.from(Client.class);
+    }
+
+    private void update(Client client) {
+        this.session = this.sessionFactory.openSession();
+        this.session.beginTransaction();
+        this.session.update(client);
+        this.session.getTransaction().commit();
+        this.session.close();
     }
 }

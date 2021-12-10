@@ -23,7 +23,7 @@ public class SaleServiceTest {
     }
     @Test
     public void getSaleByIdentityTest() {
-        Sale sale = service.getSaleByIdentity("02/12/2021");
+        Sale sale = service.getSaleByIdentity("02/12/2021/0001");
         String actualCity = sale.getBuilding().getCity();
         assertThat(actualCity).isEqualTo("Koszalin");
     }

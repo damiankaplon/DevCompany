@@ -7,6 +7,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import pl.damiankaplon.devcompany.dbutil.DbUtil;
+import pl.damiankaplon.devcompany.model.Building;
+import pl.damiankaplon.devcompany.model.Client;
 import pl.damiankaplon.devcompany.model.Sale;
 import pl.damiankaplon.devcompany.service.SaleService;
 
@@ -20,7 +22,8 @@ public class SaleController {
     SaleService saleService = new SaleService(DbUtil.sessionFactory);
 
     @FXML
-    TextField saleNrField, nameField, surnameField, peselField, cityField, addressField, postalField, streetField, apartmentNr;
+    TextField saleNrField, nameField, surnameField, peselField, cityField, addressField, postalField, streetField, apartmentNr,
+    value, signDate, paymentDate;
     @FXML
     TextArea saleTextArea;
 
@@ -42,5 +45,18 @@ public class SaleController {
             this.saleTextArea.appendText(("No sales were found for certain sale identity\n"));
         }
 
+    }
+
+    @FXML
+    public void addSale(){
+//        saleService.save(this.saleNrField.getText(),
+//        this.surnameField.getText(),
+//        this.nameField.getText(),
+//        this.peselField.getText(),
+//        this.cityField.getText(),
+//        this.postalField.getText(),
+//        this.streetField.getText(),
+//        this.addressField.getText(),
+//        this.apartmentNr.getText());
     }
 }

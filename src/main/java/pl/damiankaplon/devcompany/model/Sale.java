@@ -6,6 +6,7 @@ import javax.persistence.*;
 import java.sql.Date;
 import java.util.List;
 
+@Builder
 @Getter
 @Setter
 @NoArgsConstructor
