@@ -7,10 +7,16 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import pl.damiankaplon.devcompany.dbutil.DbUtil;
+import pl.damiankaplon.devcompany.model.Building;
+import pl.damiankaplon.devcompany.model.Client;
+import pl.damiankaplon.devcompany.model.Flat;
 import pl.damiankaplon.devcompany.model.Sale;
 import pl.damiankaplon.devcompany.service.SaleService;
+import pl.damiankaplon.devcompany.service.exception.SaleAlreadyExists;
 
 import javax.persistence.NoResultException;
+import java.sql.Date;
+import java.util.List;
 
 @NoArgsConstructor
 @Getter
@@ -23,7 +29,7 @@ public class SaleController {
     TextField saleNrFX, nameFX, surnameFX, peselFX, cityFX, addressFX, postalFX, streetFX, apartmentNrFX,
             valueFX, signDateFX, paymentDateFX;
     @FXML
-    TextArea saleTextArea;
+    TextArea textAreaFX;
 
     @FXML
     public void searchSale() {
@@ -44,21 +50,35 @@ public class SaleController {
             this.paymentDateFX.setText(String.valueOf(sale.getPaymentDate()));
         }
         catch(NoResultException ignored){
-            this.saleTextArea.appendText(("No sales were found for certain sale identity\n"));
+            this.textAreaFX.appendText(("No sales were found for certain sale identity\n"));
         }
 
     }
 
     @FXML
     public void addSale(){
-//        saleService.save(this.saleNrField.getText(),
-//        this.surnameField.getText(),
-//        this.nameField.getText(),
-//        this.peselField.getText(),
-//        this.cityField.getText(),
-//        this.postalField.getText(),
-//        this.streetField.getText(),
-//        this.addressField.getText(),
-//        this.apartmentNr.getText());
+        Building building = Building.builder().city(this.cityFX.getText())
+                .street(this.streetFX.getText())
+                .postal(this.postalFX.getText()).address(Integer.parseInt(this.addressFX.getText()))
+                .build();
+
+        Sale sale = Sale.builder()
+                .flat(List.of(Flat.builder()
+                        .flatNumber(Integer.parseInt(this.apartmentNrFX.getText()))
+                        .building(building)
+                        .build()))
+                .building(building)
+                .client(Client.builder().pesel(this.peselFX.getText()).build())
+                .saleValue(Double.parseDouble(this.valueFX.getText()))
+                .signDate(Date.valueOf(this.signDateFX.getText()))
+                .paymentDate(Date.valueOf(this.paymentDateFX.getText()))
+                .identity(this.saleNrFX.getText())
+                .build();
+
+        try {
+            saleService.save(sale);
+        } catch (SaleAlreadyExists e) {
+            this.textAreaFX.appendText("Sale with that identity already exists \n");
+        }
     }
 }
