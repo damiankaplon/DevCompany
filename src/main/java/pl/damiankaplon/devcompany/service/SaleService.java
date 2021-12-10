@@ -2,18 +2,15 @@ package pl.damiankaplon.devcompany.service;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import pl.damiankaplon.devcompany.model.Building;
-import pl.damiankaplon.devcompany.model.Client;
 import pl.damiankaplon.devcompany.model.Flat;
 import pl.damiankaplon.devcompany.model.Sale;
 import pl.damiankaplon.devcompany.service.exception.SaleAlreadyExists;
 
 import javax.persistence.NoResultException;
-import javax.persistence.Query;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
-import java.util.ArrayList;
 import java.util.List;
 
 
@@ -33,6 +30,7 @@ public class SaleService {
         this.prepareCriteria();
         this.cq.select(root).where(cb.equal(root.get("identity"), saleNr));
         Sale sale = this.session.createQuery(this.cq).getSingleResult();
+
         this.session.close();
         return sale;
     }
@@ -41,6 +39,12 @@ public class SaleService {
         Sale saleTest = getSaleByIdentity(sale.getIdentity());
         if (saleTest != null) throw new SaleAlreadyExists();
 
+        Flat flatTest = sale.getFlat().get(0);
+        this.prepareCriteria();
+//        Predicate predicateFlatNumber = cb.equal(root.get("flatNumber"), flatTest.getFlatNumber());
+//        Predicate predicateBuilding = cb.equal(root.get("building"), flatTest.getBuilding());
+//        this.cq.where(predicateBuilding, predicateFlatNumber);
+//        List<Flat> flatsTest = this.session.createQuery(this.cq).getResultList();
 
     }
 

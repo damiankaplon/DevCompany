@@ -1,9 +1,11 @@
 package pl.damiankaplon.devcompany.model;
 
 import lombok.*;
+import org.hibernate.Hibernate;
 
 import javax.persistence.*;
 import java.util.List;
+import java.util.Objects;
 
 @Builder
 @Getter
@@ -29,4 +31,17 @@ public class Building {
     @OneToMany(mappedBy = "building") private List<Sale> sale;
 
    @OneToMany(mappedBy = "building") private List<Flat> flats;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
+        Building building = (Building) o;
+        return id != 0L && Objects.equals(this.id, building.getId());
+    }
+
+    @Override
+    public int hashCode() {
+        return getClass().hashCode();
+    }
 }
