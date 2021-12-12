@@ -21,8 +21,8 @@ public class Client {
     @Column(name = "client_name") private String name;
     @Column(name = "client_surname") private String surname;
     @Column(name = "client_pesel") private String pesel;
-    @OneToMany(mappedBy = "client") private List<Sale> sales;
-    @OneToMany(mappedBy = "client") private List<Flat> clients;
+    @OneToMany(mappedBy = "client", cascade = CascadeType.ALL) private List<Sale> sales;
+    @OneToMany(mappedBy = "client", cascade = CascadeType.ALL) private List<Flat> clients;
 
     public Client(String name, String surname, String pesel){
         this.name = name;

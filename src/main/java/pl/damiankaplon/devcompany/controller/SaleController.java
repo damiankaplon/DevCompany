@@ -9,10 +9,19 @@ import lombok.Setter;
 import pl.damiankaplon.devcompany.dbutil.DbUtil;
 import pl.damiankaplon.devcompany.model.Building;
 import pl.damiankaplon.devcompany.model.Client;
+import pl.damiankaplon.devcompany.model.Flat;
 import pl.damiankaplon.devcompany.model.Sale;
 import pl.damiankaplon.devcompany.service.SaleService;
+import pl.damiankaplon.devcompany.service.exception.NoClientsFound;
+import pl.damiankaplon.devcompany.service.exception.NoSuchBuilding;
+import pl.damiankaplon.devcompany.service.exception.NoSuchFlat;
+import pl.damiankaplon.devcompany.service.exception.SaleAlreadyExists;
 
 import javax.persistence.NoResultException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.List;
+import java.util.Objects;
 
 @NoArgsConstructor
 @Getter
@@ -22,41 +31,75 @@ public class SaleController {
     SaleService saleService = new SaleService(DbUtil.sessionFactory);
 
     @FXML
-    TextField saleNrField, nameField, surnameField, peselField, cityField, addressField, postalField, streetField, apartmentNr,
-    value, signDate, paymentDate;
+    TextField saleNrFX, nameFX, surnameFX, peselFX, cityFX, addressFX, postalFX, streetFX, apartmentNrFX,
+            valueFX, signDateFX, paymentDateFX;
     @FXML
-    TextArea saleTextArea;
+    TextArea textAreaFX;
 
     @FXML
     public void searchSale() {
         try{
-            Sale sale = saleService.getSaleByIdentity(saleNrField.getText());
-            this.saleNrField.setText(sale.getIdentity());
-            this.nameField.setText(sale.getClient().getName());
-            this.surnameField.setText(sale.getClient().getSurname());
-            this.peselField.setText(sale.getClient().getPesel());
-            this.cityField.setText(sale.getBuilding().getCity());
-            this.postalField.setText(sale.getBuilding().getPostal());
-            this.streetField.setText(sale.getBuilding().getStreet());
-            this.addressField.setText(String.valueOf(sale.getBuilding().getAddress()));
-            this.apartmentNr.setText(String.valueOf(sale.getFlat().get(0).getFlatNumber()));
+            Sale sale = saleService.getSaleByIdentity(saleNrFX.getText());
+
+            this.saleNrFX.setText(sale.getIdentity());
+            this.nameFX.setText(sale.getClient().getName());
+            this.surnameFX.setText(sale.getClient().getSurname());
+            this.peselFX.setText(sale.getClient().getPesel());
+            this.cityFX.setText(sale.getBuilding().getCity());
+            this.postalFX.setText(sale.getBuilding().getPostal());
+            this.streetFX.setText(sale.getBuilding().getStreet());
+            this.addressFX.setText(String.valueOf(sale.getBuilding().getAddress()));
+            this.apartmentNrFX.setText(String.valueOf(sale.getFlat().get(0).getFlatNumber()));
+            this.valueFX.setText(String.valueOf(sale.getSaleValue()));
+            this.signDateFX.setText(String.valueOf(sale.getSignDate()));
+            this.paymentDateFX.setText(String.valueOf(sale.getPaymentDate()));
         }
         catch(NoResultException ignored){
-            this.saleTextArea.appendText(("No sales were found for certain sale identity\n"));
+            this.textAreaFX.appendText(("No sales were found for certain sale identity\n"));
         }
 
     }
 
     @FXML
     public void addSale(){
-//        saleService.save(this.saleNrField.getText(),
-//        this.surnameField.getText(),
-//        this.nameField.getText(),
-//        this.peselField.getText(),
-//        this.cityField.getText(),
-//        this.postalField.getText(),
-//        this.streetField.getText(),
-//        this.addressField.getText(),
-//        this.apartmentNr.getText());
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
+        java.util.Date signDate = null;
+        java.util.Date paymentDate = null;
+        try {
+            signDate = simpleDateFormat.parse(this.signDateFX.getText());
+            paymentDate = simpleDateFormat.parse(this.paymentDateFX.getText());
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        Building building = Building.builder().city(this.cityFX.getText())
+                .street(this.streetFX.getText())
+                .postal(this.postalFX.getText()).address(Integer.parseInt(this.addressFX.getText()))
+                .build();
+
+        Sale sale = Sale.builder()
+                .flat(List.of(Flat.builder()
+                        .flatNumber(Integer.parseInt(this.apartmentNrFX.getText()))
+                        .building(building)
+                        .build()))
+                .building(building)
+                .client(Client.builder().pesel(this.peselFX.getText()).build())
+                .saleValue(Double.parseDouble(this.valueFX.getText()))
+                .signDate(new java.sql.Date(Objects.requireNonNull(signDate).getTime()))
+                .paymentDate(new java.sql.Date(Objects.requireNonNull(paymentDate).getTime()))
+                .identity(this.saleNrFX.getText())
+                .build();
+
+        try {
+            saleService.save(sale);
+        } catch (SaleAlreadyExists e) {
+            this.textAreaFX.appendText("Sale with that identity already exists \n");
+        } catch (NoSuchBuilding e) {
+            this.textAreaFX.appendText("There is no such building \n");
+        } catch (NoSuchFlat e) {
+            this.textAreaFX.appendText("There is no such flat \n");
+        } catch (NoClientsFound e) {
+            this.textAreaFX.appendText("There is no such client \n");
+        }
     }
 }

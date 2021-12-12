@@ -14,6 +14,7 @@ import javax.persistence.criteria.Root;
 import java.util.List;
 import java.util.Optional;
 
+
 public class ClientService {
 
     private final SessionFactory sessionFactory;
