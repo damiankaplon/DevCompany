@@ -33,6 +33,14 @@ public class FlatService {
         return resultFlat;
     }
 
+    public void update(Flat flat) {
+        this.session = this.sessionFactory.openSession();
+        this.session.beginTransaction();
+        this.session.update(flat);
+        this.session.getTransaction().commit();
+        this.session.close();
+    }
+
     private void prepareCriteria() {
         this.session = this.sessionFactory.openSession();
         this.cb = this.session.getCriteriaBuilder();

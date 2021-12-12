@@ -12,11 +12,16 @@ import pl.damiankaplon.devcompany.model.Client;
 import pl.damiankaplon.devcompany.model.Flat;
 import pl.damiankaplon.devcompany.model.Sale;
 import pl.damiankaplon.devcompany.service.SaleService;
+import pl.damiankaplon.devcompany.service.exception.NoClientsFound;
+import pl.damiankaplon.devcompany.service.exception.NoSuchBuilding;
+import pl.damiankaplon.devcompany.service.exception.NoSuchFlat;
 import pl.damiankaplon.devcompany.service.exception.SaleAlreadyExists;
 
 import javax.persistence.NoResultException;
-import java.sql.Date;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.List;
+import java.util.Objects;
 
 @NoArgsConstructor
 @Getter
@@ -57,6 +62,16 @@ public class SaleController {
 
     @FXML
     public void addSale(){
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
+        java.util.Date signDate = null;
+        java.util.Date paymentDate = null;
+        try {
+            signDate = simpleDateFormat.parse(this.signDateFX.getText());
+            paymentDate = simpleDateFormat.parse(this.paymentDateFX.getText());
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
         Building building = Building.builder().city(this.cityFX.getText())
                 .street(this.streetFX.getText())
                 .postal(this.postalFX.getText()).address(Integer.parseInt(this.addressFX.getText()))
@@ -70,8 +85,8 @@ public class SaleController {
                 .building(building)
                 .client(Client.builder().pesel(this.peselFX.getText()).build())
                 .saleValue(Double.parseDouble(this.valueFX.getText()))
-                .signDate(Date.valueOf(this.signDateFX.getText()))
-                .paymentDate(Date.valueOf(this.paymentDateFX.getText()))
+                .signDate(new java.sql.Date(Objects.requireNonNull(signDate).getTime()))
+                .paymentDate(new java.sql.Date(Objects.requireNonNull(paymentDate).getTime()))
                 .identity(this.saleNrFX.getText())
                 .build();
 
@@ -79,6 +94,12 @@ public class SaleController {
             saleService.save(sale);
         } catch (SaleAlreadyExists e) {
             this.textAreaFX.appendText("Sale with that identity already exists \n");
+        } catch (NoSuchBuilding e) {
+            this.textAreaFX.appendText("There is no such building \n");
+        } catch (NoSuchFlat e) {
+            this.textAreaFX.appendText("There is no such flat \n");
+        } catch (NoClientsFound e) {
+            this.textAreaFX.appendText("There is no such client \n");
         }
     }
 }
