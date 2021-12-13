@@ -67,8 +67,10 @@ public class SaleServiceTest {
 
     @Test
     public void validateSaleIdentityTest(){
-        boolean result = service.validateSaleIdentity("12/12/20da/01");
-        assertThat(result).isTrue();
+        boolean result = service.validateSaleIdentity("12/12/20da/0001");
+        boolean result2 = service.validateSaleIdentity("12/12/2020/0001");
+        assertThat(result).isFalse();
+        assertThat(result2).isTrue();
     }
 
 }

@@ -59,7 +59,32 @@ public class SaleController {
     }
 
     @FXML
-    public void addSale() throws ParseException {
+    public void addSale() {
+        try {
+            addNewSale();
+            this.textAreaFX.appendText("Successfully added new Sale! \n");
+        } catch (NotSpecifiedReqArgs e) {
+            this.textAreaFX.appendText("Please specify all required arguments \n");
+        } catch (ParseException e) {
+            this.textAreaFX.appendText("Please specify correct date format MM/DD/YYYY \n");
+        }
+    }
+
+    private void addNewSale() throws NotSpecifiedReqArgs, ParseException {
+        if (
+                this.saleNrFX.getText().isBlank() ||
+                        this.nameFX.getText().isBlank() ||
+                        this.surnameFX.getText().isBlank() ||
+                        this.peselFX.getText().isBlank() ||
+                        this.cityFX.getText().isBlank() ||
+                        this.postalFX.getText().isBlank() ||
+                        this.streetFX.getText().isBlank() ||
+                        this.addressFX.getText().isBlank() ||
+                        this.apartmentNrFX.getText().isBlank() ||
+                        this.valueFX.getText().isBlank() ||
+                        this.signDateFX.getText().isBlank()
+        ) throw new NotSpecifiedReqArgs();
+
         Date signDate = parseStringDateToSqlDateObj(this.signDateFX.getText());
         Date paymentDate = parseStringDateToSqlDateObj(this.paymentDateFX.getText());
 
@@ -95,7 +120,6 @@ public class SaleController {
             this.textAreaFX.appendText("Wrong sale identity. The correct is XX/XX/XXXX/XXXX\n");
         }
     }
-
 
     public java.sql.Date parseStringDateToSqlDateObj(String stringDate) throws ParseException {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");

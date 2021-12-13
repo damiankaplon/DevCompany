@@ -4,6 +4,7 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import pl.damiankaplon.devcompany.model.Building;
 
+import javax.persistence.NoResultException;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
@@ -21,7 +22,7 @@ public class BuildingService {
         this.sessionFactory = sessionFactory;
     }
 
-    public Building getBuilding(Building building) {
+    public Building getBuilding(Building building) throws NoResultException {
         this.prepareCriteria();
         Predicate predicatePostal = cb.equal(root.get("postal"), building.getPostal());
         Predicate predicateAddress = cb.equal(root.get("address"), building.getAddress());

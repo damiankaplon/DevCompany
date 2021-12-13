@@ -5,6 +5,7 @@ import org.hibernate.SessionFactory;
 import pl.damiankaplon.devcompany.model.Flat;
 import pl.damiankaplon.devcompany.model.Sale;
 
+import javax.persistence.NoResultException;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
@@ -23,7 +24,7 @@ public class FlatService {
         this.sessionFactory = sessionFactory;
     }
 
-    public Flat getFlat(Flat flat) {
+    public Flat getFlat(Flat flat) throws NoResultException {
         this.prepareCriteria();
         Predicate predicateFlatNumber = cb.equal(root.get("flatNumber"), flat.getFlatNumber());
         Predicate predicateBuilding = cb.equal(root.get("building"), flat.getBuilding());
