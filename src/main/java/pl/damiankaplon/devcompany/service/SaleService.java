@@ -6,17 +6,19 @@ import pl.damiankaplon.devcompany.model.Building;
 import pl.damiankaplon.devcompany.model.Client;
 import pl.damiankaplon.devcompany.model.Flat;
 import pl.damiankaplon.devcompany.model.Sale;
-import pl.damiankaplon.devcompany.service.exception.NoClientsFound;
-import pl.damiankaplon.devcompany.service.exception.NoSuchBuilding;
-import pl.damiankaplon.devcompany.service.exception.NoSuchFlat;
-import pl.damiankaplon.devcompany.service.exception.SaleAlreadyExists;
+import pl.damiankaplon.devcompany.service.exception.*;
+
 
 import javax.persistence.NoResultException;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Objects;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 
 public class SaleService {
@@ -40,11 +42,13 @@ public class SaleService {
         return sale;
     }
 
-    public void save(Sale sale) throws SaleAlreadyExists, NoSuchBuilding, NoSuchFlat, NoClientsFound {
+    public void save(Sale sale) throws SaleAlreadyExists, NoSuchBuilding, NoSuchFlat, NoClientsFound, WrongSaleIdentity {
         try {
             getSaleByIdentity(sale.getIdentity());
             throw new SaleAlreadyExists();
         } catch (NoResultException ignored) {}
+
+        if (!this.validateSaleIdentity(sale.getIdentity())) throw new WrongSaleIdentity();
 
         Building properBuilding = getProperBuildingForSale(sale);
         sale.getFlat().get(0).setBuilding(properBuilding);
@@ -118,5 +122,11 @@ public class SaleService {
         this.session.save(ob);
         this.session.getTransaction().commit();
         this.session.close();
+    }
+
+    public boolean validateSaleIdentity(String saleIdentity) {
+        Pattern pattern = Pattern.compile("\\d{2}[/]\\d{2}[/]\\d{4}[/]\\d{4}");
+        Matcher m = pattern.matcher(saleIdentity);
+        return m.matches();
     }
 }

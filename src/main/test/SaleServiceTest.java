@@ -7,10 +7,7 @@ import pl.damiankaplon.devcompany.model.Client;
 import pl.damiankaplon.devcompany.model.Flat;
 import pl.damiankaplon.devcompany.model.Sale;
 import pl.damiankaplon.devcompany.service.SaleService;
-import pl.damiankaplon.devcompany.service.exception.NoClientsFound;
-import pl.damiankaplon.devcompany.service.exception.NoSuchBuilding;
-import pl.damiankaplon.devcompany.service.exception.NoSuchFlat;
-import pl.damiankaplon.devcompany.service.exception.SaleAlreadyExists;
+import pl.damiankaplon.devcompany.service.exception.*;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -41,7 +38,7 @@ public class SaleServiceTest {
     }
 
     @Test
-    public void saveTest() throws SaleAlreadyExists, NoSuchBuilding, ParseException, NoSuchFlat, NoClientsFound {
+    public void saveTest() throws SaleAlreadyExists, NoSuchBuilding, ParseException, NoSuchFlat, NoClientsFound, WrongSaleIdentity {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
 
         java.util.Date signDate = simpleDateFormat.parse("20/20/2020");
@@ -66,6 +63,12 @@ public class SaleServiceTest {
                 .build();
         service.save(sale);
         //assertThatExceptionOfType(SaleAlreadyExists.class).isThrownBy(()->service.save(sale));
+    }
+
+    @Test
+    public void validateSaleIdentityTest(){
+        boolean result = service.validateSaleIdentity("12/12/20da/01");
+        assertThat(result).isTrue();
     }
 
 }

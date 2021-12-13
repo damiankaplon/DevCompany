@@ -12,12 +12,10 @@ import pl.damiankaplon.devcompany.model.Client;
 import pl.damiankaplon.devcompany.model.Flat;
 import pl.damiankaplon.devcompany.model.Sale;
 import pl.damiankaplon.devcompany.service.SaleService;
-import pl.damiankaplon.devcompany.service.exception.NoClientsFound;
-import pl.damiankaplon.devcompany.service.exception.NoSuchBuilding;
-import pl.damiankaplon.devcompany.service.exception.NoSuchFlat;
-import pl.damiankaplon.devcompany.service.exception.SaleAlreadyExists;
+import pl.damiankaplon.devcompany.service.exception.*;
 
 import javax.persistence.NoResultException;
+import java.sql.Date;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.List;
@@ -61,16 +59,9 @@ public class SaleController {
     }
 
     @FXML
-    public void addSale(){
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
-        java.util.Date signDate = null;
-        java.util.Date paymentDate = null;
-        try {
-            signDate = simpleDateFormat.parse(this.signDateFX.getText());
-            paymentDate = simpleDateFormat.parse(this.paymentDateFX.getText());
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
+    public void addSale() throws ParseException {
+        Date signDate = parseStringDateToSqlDateObj(this.signDateFX.getText());
+        Date paymentDate = parseStringDateToSqlDateObj(this.paymentDateFX.getText());
 
         Building building = Building.builder().city(this.cityFX.getText())
                 .street(this.streetFX.getText())
@@ -85,8 +76,8 @@ public class SaleController {
                 .building(building)
                 .client(Client.builder().pesel(this.peselFX.getText()).build())
                 .saleValue(Double.parseDouble(this.valueFX.getText()))
-                .signDate(new java.sql.Date(Objects.requireNonNull(signDate).getTime()))
-                .paymentDate(new java.sql.Date(Objects.requireNonNull(paymentDate).getTime()))
+                .signDate(signDate)
+                .paymentDate(paymentDate)
                 .identity(this.saleNrFX.getText())
                 .build();
 
@@ -100,6 +91,15 @@ public class SaleController {
             this.textAreaFX.appendText("There is no such flat \n");
         } catch (NoClientsFound e) {
             this.textAreaFX.appendText("There is no such client \n");
+        } catch (WrongSaleIdentity e) {
+            this.textAreaFX.appendText("Wrong sale identity. The correct is XX/XX/XXXX/XXXX\n");
         }
+    }
+
+
+    public java.sql.Date parseStringDateToSqlDateObj(String stringDate) throws ParseException {
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
+        java.util.Date utilDate = simpleDateFormat.parse(stringDate);
+        return new java.sql.Date(Objects.requireNonNull(utilDate).getTime());
     }
 }
