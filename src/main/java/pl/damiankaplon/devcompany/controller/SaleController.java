@@ -116,13 +116,13 @@ public class SaleController {
         } catch (NoClientsFound e) {
             this.textAreaFX.appendText("There is no such client \n");
         } catch (WrongSaleIdentity e) {
-            this.textAreaFX.appendText("Wrong sale identity. The correct is XX/XX/XXXX/XXXX\n");
+            this.textAreaFX.appendText("Wrong sale identity. The correct is dd/mm/YYYY/iiii\n");
         } catch (FlatAlreadySoldException e) {
             this.textAreaFX.appendText("This flat is already sold\n");
         }
     }
 
-    public java.sql.Date stringToSqlDate(String stringDate) throws ParseException {
+    private java.sql.Date stringToSqlDate(String stringDate) throws ParseException {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
         java.util.Date utilDate = simpleDateFormat.parse(stringDate);
         return new java.sql.Date(Objects.requireNonNull(utilDate).getTime());

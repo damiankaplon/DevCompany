@@ -5,7 +5,7 @@
 -- Dumped from database version 12.9 (Ubuntu 12.9-0ubuntu0.20.04.1)
 -- Dumped by pg_dump version 12.9 (Ubuntu 12.9-0ubuntu0.20.04.1)
 
--- Started on 2021-12-12 11:59:12 CET
+-- Started on 2021-12-14 20:38:22 CET
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -472,12 +472,21 @@ COPY public.constructions (construction_id, construction_name, construction_city
 --
 
 COPY public.flats (flat_id, client_id, building_id, flat_number, sale_id) FROM stdin;
-9	\N	1	2	\N
 11	\N	2	31	\N
-12	\N	2	1	\N
-13	\N	2	3	\N
-10	\N	1	30	\N
 8	\N	1	1	1
+19	\N	2	1	14
+24	\N	1	7	\N
+26	\N	1	9	\N
+27	\N	1	10	\N
+28	\N	1	11	\N
+30	\N	2	2	\N
+33	\N	1	4	16
+22	\N	1	5	17
+32	\N	1	3	20
+18	\N	1	2	13
+23	\N	1	6	\N
+25	\N	1	8	23
+31	\N	2	3	24
 \.
 
 
@@ -514,9 +523,14 @@ COPY public.machines_constructions (construction_id, machine_id, machine_start, 
 
 COPY public.sales (sale_id, building_id, client_id, sale_value, sale_assign_date, sale_payment_date, sale_identity) FROM stdin;
 1	1	1	400000	2021-12-02	2021-12-03	02/12/2021/0001
-2	1	1	0	\N	\N	02/12/2021/0002
-8	1	3	500000	2021-08-20	2021-08-20	20/20/2020
-9	1	3	450000	2021-08-20	2021-08-20	20/20/2020/0003
+13	1	3	300000	2021-12-12	2021-12-12	12/12/2021/0003
+14	2	3	500000	2021-12-12	2021-12-12	12/12/2021/0012
+15	1	9	300000	2021-12-13	2021-12-13	13/12/2021/0001
+16	1	9	300000	2021-12-13	2021-12-13	13/12/2021/0002
+17	1	3	632000	2021-12-02	2021-12-02	02/12/2021/1288
+20	1	13	799999	2021-12-14	2021-12-14	14/12/2021/0003
+23	1	13	799999	2021-12-14	2021-12-14	14/12/2021/0102
+24	2	13	345345	2021-12-14	2021-12-14	14/12/2021/0105
 \.
 
 
@@ -573,7 +587,7 @@ SELECT pg_catalog.setval('public.constructions_construction_id_seq', 3, true);
 -- Name: flats_flat_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('public.flats_flat_id_seq', 16, true);
+SELECT pg_catalog.setval('public.flats_flat_id_seq', 33, true);
 
 
 --
@@ -591,7 +605,7 @@ SELECT pg_catalog.setval('public.machines_machine_id_seq', 3, true);
 -- Name: sales_sale_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('public.sales_sale_id_seq', 9, true);
+SELECT pg_catalog.setval('public.sales_sale_id_seq', 24, true);
 
 
 --
@@ -952,7 +966,7 @@ ALTER TABLE ONLY public.flats
     ADD CONSTRAINT one_sale_many_flats FOREIGN KEY (sale_id) REFERENCES public.sales(sale_id);
 
 
--- Completed on 2021-12-12 11:59:12 CET
+-- Completed on 2021-12-14 20:38:22 CET
 
 --
 -- PostgreSQL database dump complete
