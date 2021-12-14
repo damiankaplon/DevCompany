@@ -38,7 +38,7 @@ public class SaleServiceTest {
     }
 
     @Test
-    public void saveTest() throws SaleAlreadyExists, NoSuchBuilding, ParseException, NoSuchFlat, NoClientsFound, WrongSaleIdentity {
+    public void saveTest() throws SaleAlreadyExists, NoSuchBuilding, ParseException, NoSuchFlat, NoClientsFound, WrongSaleIdentity, FlatAlreadySoldException {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
 
         java.util.Date signDate = simpleDateFormat.parse("20/20/2020");
@@ -67,8 +67,8 @@ public class SaleServiceTest {
 
     @Test
     public void validateSaleIdentityTest(){
-        boolean result = service.validateSaleIdentity("12/12/20da/0001");
-        boolean result2 = service.validateSaleIdentity("12/12/2020/0001");
+        boolean result = service.validateRegexSaleIdentity("12/12/20da/0001");
+        boolean result2 = service.validateRegexSaleIdentity("12/12/2020/0001");
         assertThat(result).isFalse();
         assertThat(result2).isTrue();
     }

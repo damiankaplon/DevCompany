@@ -3,6 +3,7 @@ package pl.damiankaplon.devcompany.service;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import pl.damiankaplon.devcompany.model.Building;
+import pl.damiankaplon.devcompany.service.exception.NoSuchBuilding;
 
 import javax.persistence.NoResultException;
 import javax.persistence.criteria.CriteriaBuilder;
@@ -22,14 +23,18 @@ public class BuildingService {
         this.sessionFactory = sessionFactory;
     }
 
-    public Building getBuilding(Building building) throws NoResultException {
+    public Building getBuilding(Building building) throws NoSuchBuilding {
         this.prepareCriteria();
         Predicate predicatePostal = cb.equal(root.get("postal"), building.getPostal());
         Predicate predicateAddress = cb.equal(root.get("address"), building.getAddress());
         this.cq.where(predicatePostal, predicateAddress);
-        Building resultBuilding = this.session.createQuery(this.cq).getSingleResult();
-        this.session.close();
-        return resultBuilding;
+        try {
+            return this.session.createQuery(this.cq).getSingleResult();
+        } catch (NoResultException exception) {
+            throw new NoSuchBuilding();
+        } finally {
+            this.session.close();
+        }
     }
 
     private void prepareCriteria() {

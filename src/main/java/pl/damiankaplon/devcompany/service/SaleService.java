@@ -13,10 +13,7 @@ import javax.persistence.NoResultException;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.List;
-import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -42,70 +39,21 @@ public class SaleService {
         return sale;
     }
 
-    public void save(Sale sale) throws SaleAlreadyExists, NoSuchBuilding, NoSuchFlat, NoClientsFound, WrongSaleIdentity {
-        try {
-            getSaleByIdentity(sale.getIdentity());
-            throw new SaleAlreadyExists();
-        } catch (NoResultException ignored) {}
-
-        if (!this.validateSaleIdentity(sale.getIdentity())) throw new WrongSaleIdentity();
-
-        Building properBuilding = getProperBuildingForSale(sale);
-        sale.getFlat().get(0).setBuilding(properBuilding);
-        sale.setBuilding(properBuilding);
-
-        Flat properFlat = getProperFlatForSale(sale);
-        sale.setFlat(List.of(properFlat));
-
-        Client properClient = getProperClientForSale(sale);
-        sale.setClient(properClient);
-
-        sale.setBuilding(properBuilding);
-        sale.setFlat(List.of(properFlat));
-
+    public void save(Sale sale) throws SaleAlreadyExists, NoSuchBuilding, NoSuchFlat, NoClientsFound, WrongSaleIdentity, FlatAlreadySoldException {
+        Sale validatedSale = validateSale(sale);
         saveTransaction(sale);
 
-        Sale thisSaleFromDb = getSaleByIdentity(sale.getIdentity());
-        properFlat.setSale(thisSaleFromDb);
-        saveTransaction(properFlat);
+        Flat SaleFlat = new FlatService(this.sessionFactory).getFlat(sale.getFlat().get(0));
+        SaleFlat.setSale(validatedSale);
+        new FlatService(this.sessionFactory).update(SaleFlat);
     }
 
-    private Building getProperBuildingForSale(Sale sale) throws NoSuchBuilding {
-        BuildingService buildingService = new BuildingService(this.sessionFactory);
+    private boolean checkIfInDb(Sale sale) {
         try {
-            return buildingService.getBuilding(sale.getBuilding());
-        }
-        catch (NoResultException e) {
-            e.printStackTrace();
-            NoSuchBuilding ex = new NoSuchBuilding();
-            ex.initCause(e);
-            throw ex;
-        }
-    }
-
-    private Flat getProperFlatForSale(Sale sale) throws NoSuchFlat {
-        FlatService flatService = new FlatService(this.sessionFactory);
-        try {
-            return flatService.getFlat(sale.getFlat().get(0));
-        }
-        catch (NoResultException e) {
-            e.printStackTrace();
-            NoSuchFlat ex = new NoSuchFlat();
-            ex.initCause(e);
-            throw ex;
-        }
-    }
-
-    private Client getProperClientForSale(Sale sale) throws NoClientsFound {
-        ClientService clientService = new ClientService(this.sessionFactory);
-        try {
-            return clientService.getClientByAllArgs(sale.getClient()).get(0);
-        }
-        catch (NoResultException e) {
-            e.printStackTrace();
-            NoClientsFound ex = new NoClientsFound(this.session);
-            ex.initCause(e);
-            throw ex;
+            getSaleByIdentity(sale.getIdentity());
+            return true;
+        } catch (NoResultException exception) {
+            return false;
         }
     }
 
@@ -124,9 +72,27 @@ public class SaleService {
         this.session.close();
     }
 
-    public boolean validateSaleIdentity(String saleIdentity) {
+    public boolean validateRegexSaleIdentity(String saleIdentity) {
         Pattern pattern = Pattern.compile("\\d{2}[/]\\d{2}[/]\\d{4}[/]\\d{4}");
         Matcher m = pattern.matcher(saleIdentity);
         return m.matches();
+    }
+
+    private Sale validateSale(Sale sale) throws SaleAlreadyExists, WrongSaleIdentity, NoSuchBuilding, FlatAlreadySoldException, NoClientsFound {
+        if (checkIfInDb(sale)) throw new SaleAlreadyExists();
+        if (! validateRegexSaleIdentity(sale.getIdentity())) throw new WrongSaleIdentity();
+        Building validatedBuilding = new BuildingService(this.sessionFactory).getBuilding(sale.getBuilding());
+        sale.setBuilding(validatedBuilding);
+
+        FlatService flatService = new FlatService(this.sessionFactory);
+        sale.getFlat().get(0).setBuilding(validatedBuilding);
+        if (flatService.checkIfSold(sale.getFlat().get(0))) throw new FlatAlreadySoldException();
+        Flat validateFlat = flatService.getFlat(sale.getFlat().get(0));
+        sale.setFlat(List.of(validateFlat));
+
+        Client properClient = new ClientService(this.sessionFactory).getClientByAllArgs(sale.getClient()).get(0);
+        sale.setClient(properClient);
+
+        return sale;
     }
 }

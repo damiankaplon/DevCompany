@@ -3,14 +3,14 @@ package pl.damiankaplon.devcompany.service;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import pl.damiankaplon.devcompany.model.Flat;
-import pl.damiankaplon.devcompany.model.Sale;
+import pl.damiankaplon.devcompany.service.exception.FlatAlreadySoldException;
 
 import javax.persistence.NoResultException;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
-import java.util.List;
+import java.util.Objects;
 
 public class FlatService {
 
@@ -34,12 +34,18 @@ public class FlatService {
         return resultFlat;
     }
 
-    public void update(Flat flat) {
+    public void update(Flat flat) throws FlatAlreadySoldException {
+        if (checkIfSold(flat)) throw new FlatAlreadySoldException();
         this.session = this.sessionFactory.openSession();
         this.session.beginTransaction();
         this.session.update(flat);
         this.session.getTransaction().commit();
         this.session.close();
+    }
+
+    public boolean checkIfSold(Flat flat) {
+        Flat flatFromDb = getFlat(flat);
+        return !Objects.isNull(flatFromDb.getSale());
     }
 
     private void prepareCriteria() {

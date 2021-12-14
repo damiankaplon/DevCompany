@@ -15,7 +15,6 @@ import pl.damiankaplon.devcompany.service.SaleService;
 import pl.damiankaplon.devcompany.service.exception.*;
 
 import javax.persistence.NoResultException;
-import java.sql.Date;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.List;
@@ -62,11 +61,13 @@ public class SaleController {
     public void addSale() {
         try {
             addNewSale();
-            this.textAreaFX.appendText("Successfully added new Sale! \n");
         } catch (NotSpecifiedReqArgs e) {
             this.textAreaFX.appendText("Please specify all required arguments \n");
         } catch (ParseException e) {
             this.textAreaFX.appendText("Please specify correct date format MM/DD/YYYY \n");
+        }
+        catch (NumberFormatException e) {
+            this.textAreaFX.appendText("Please type in proper number in field where needed \n");
         }
     }
 
@@ -85,9 +86,6 @@ public class SaleController {
                         this.signDateFX.getText().isBlank()
         ) throw new NotSpecifiedReqArgs();
 
-        Date signDate = parseStringDateToSqlDateObj(this.signDateFX.getText());
-        Date paymentDate = parseStringDateToSqlDateObj(this.paymentDateFX.getText());
-
         Building building = Building.builder().city(this.cityFX.getText())
                 .street(this.streetFX.getText())
                 .postal(this.postalFX.getText()).address(Integer.parseInt(this.addressFX.getText()))
@@ -101,13 +99,14 @@ public class SaleController {
                 .building(building)
                 .client(Client.builder().pesel(this.peselFX.getText()).build())
                 .saleValue(Double.parseDouble(this.valueFX.getText()))
-                .signDate(signDate)
-                .paymentDate(paymentDate)
+                .signDate(stringToSqlDate(this.signDateFX.getText()))
+                .paymentDate(stringToSqlDate(this.paymentDateFX.getText()))
                 .identity(this.saleNrFX.getText())
                 .build();
 
         try {
             saleService.save(sale);
+            this.textAreaFX.appendText("Successfully added new Sale! \n");
         } catch (SaleAlreadyExists e) {
             this.textAreaFX.appendText("Sale with that identity already exists \n");
         } catch (NoSuchBuilding e) {
@@ -118,10 +117,12 @@ public class SaleController {
             this.textAreaFX.appendText("There is no such client \n");
         } catch (WrongSaleIdentity e) {
             this.textAreaFX.appendText("Wrong sale identity. The correct is XX/XX/XXXX/XXXX\n");
+        } catch (FlatAlreadySoldException e) {
+            this.textAreaFX.appendText("This flat is already sold\n");
         }
     }
 
-    public java.sql.Date parseStringDateToSqlDateObj(String stringDate) throws ParseException {
+    public java.sql.Date stringToSqlDate(String stringDate) throws ParseException {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
         java.util.Date utilDate = simpleDateFormat.parse(stringDate);
         return new java.sql.Date(Objects.requireNonNull(utilDate).getTime());
