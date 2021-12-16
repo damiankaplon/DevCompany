@@ -5,6 +5,8 @@ import pl.damiankaplon.devcompany.dbutil.DbUtil;
 import pl.damiankaplon.devcompany.model.Building;
 import pl.damiankaplon.devcompany.model.Flat;
 import pl.damiankaplon.devcompany.service.FlatService;
+import pl.damiankaplon.devcompany.service.exception.NoSuchFlat;
+
 import static org.assertj.core.api.Assertions.*;
 
 /**
@@ -22,7 +24,7 @@ public class FlatServiceTest {
         service = new FlatService(sessionFactory);
     }
     @Test
-    public void getSaleByIdentityTest() {
+    public void getSaleByIdentityTest() throws NoSuchFlat {
        //Given
         Flat testFlat = Flat.builder().flatNumber(30)
                 .building(Building.builder()

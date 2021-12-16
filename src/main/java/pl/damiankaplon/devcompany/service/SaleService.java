@@ -12,6 +12,7 @@ import pl.damiankaplon.devcompany.service.exception.*;
 import javax.persistence.NoResultException;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -26,7 +27,7 @@ public class SaleService {
     private CriteriaQuery<Sale> cq;
     private Root<Sale> root;
 
-    public SaleService(SessionFactory sessionFactory) throws NoResultException {
+    public SaleService(SessionFactory sessionFactory) {
         this.sessionFactory = sessionFactory;
     }
 
@@ -37,6 +38,17 @@ public class SaleService {
 
         this.session.close();
         return sale;
+    }
+
+    public List<Sale> getSalesByClient(Client client) throws NoClientsFound, NotSpecifiedReqArgs {
+        if (client.getSurname().isBlank() && client.getPesel().isBlank()) throw new NotSpecifiedReqArgs();
+        List<Client> clientFromDb = new ClientService(this.sessionFactory).getClientByAllArgs(client);
+        this.prepareCriteria();
+        Predicate predicateClient = cb.equal(root.get("client"), clientFromDb);
+        this.cq.select(root).where(predicateClient);
+        List<Sale> sales = this.session.createQuery(this.cq).getResultList();
+        this.session.close();
+        return sales;
     }
 
     public void save(Sale sale) throws SaleAlreadyExists, NoSuchBuilding, NoSuchFlat, NoClientsFound, WrongSaleIdentity, FlatAlreadySoldException {
@@ -78,7 +90,7 @@ public class SaleService {
         return m.matches();
     }
 
-    private Sale validateSale(Sale sale) throws SaleAlreadyExists, WrongSaleIdentity, NoSuchBuilding, FlatAlreadySoldException, NoClientsFound {
+    private Sale validateSale(Sale sale) throws SaleAlreadyExists, WrongSaleIdentity, NoSuchBuilding, FlatAlreadySoldException, NoClientsFound, NoSuchFlat {
         if (checkIfInDb(sale)) throw new SaleAlreadyExists();
         if (! validateRegexSaleIdentity(sale.getIdentity())) throw new WrongSaleIdentity();
         Building validatedBuilding = new BuildingService(this.sessionFactory).getBuilding(sale.getBuilding());

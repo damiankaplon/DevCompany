@@ -64,7 +64,7 @@ public class ClientController implements Initializable {
         } catch (ManySamePeselsInDb e) {
             this.clientTextArea.appendText("Many Clients with same pesel in database. Call IT!\n");
         } catch (NotSpecifiedReqArgs e) {
-            this.clientTextArea.appendText("You have to specify Pesel to identify client you want to update\n");
+            this.clientTextArea.appendText("You have to specify Pesel, Name and Surname to identify client you want to update\n");
         } finally {
             this.refreshClientGrid();
         }

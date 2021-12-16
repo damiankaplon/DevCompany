@@ -35,6 +35,41 @@ public class SaleController {
 
     @FXML
     public void searchSale() {
+        if (this.saleNrFX.getText().isBlank()) {
+            try {
+                searchSaleByClient();
+            } catch (NotSpecifiedReqArgs e) {
+                e.printStackTrace();
+                this.textAreaFX.appendText("To search sale for certain client specify name and surname or pesel \n");
+            }
+        } else {
+            searchSaleByIdentity();
+        }
+    }
+
+    private void searchSaleByClient() throws NotSpecifiedReqArgs {
+        Client client = Client.builder()
+                .name(this.nameFX.getText())
+                .surname(this.surnameFX.getText())
+                .pesel(this.peselFX.getText())
+                .build();
+        try {
+            List<Sale> sales = saleService.getSalesByClient(client);
+            sales.forEach(s -> {
+                String string = "this client has sale with identity: " +
+                        s.getIdentity() +
+                        '\n';
+                this.textAreaFX.appendText(string);
+            });
+        } catch (NoClientsFound e) {
+            this.textAreaFX.appendText("There is no such client \n");
+            //} catch (NotSpecifiedReqArgs e) {
+            //    this.textAreaFX.appendText("To search by client properties you have to specify pesel or surname and name, at least \n");
+            // }
+        }
+    }
+
+    public void searchSaleByIdentity() {
         try{
             Sale sale = saleService.getSaleByIdentity(saleNrFX.getText());
 
@@ -52,7 +87,7 @@ public class SaleController {
             this.paymentDateFX.setText(String.valueOf(sale.getPaymentDate()));
         }
         catch(NoResultException ignored){
-            this.textAreaFX.appendText(("No sales were found for certain sale identity\n"));
+            this.textAreaFX.appendText(("You can search by using name, surname, pesel or just sale identity\n"));
         }
 
     }
@@ -64,7 +99,7 @@ public class SaleController {
         } catch (NotSpecifiedReqArgs e) {
             this.textAreaFX.appendText("Please specify all required arguments \n");
         } catch (ParseException e) {
-            this.textAreaFX.appendText("Please specify correct date format MM/DD/YYYY \n");
+            this.textAreaFX.appendText("Please specify correct date format MM-DD-YYYY \n");
         }
         catch (NumberFormatException e) {
             this.textAreaFX.appendText("Please type in proper number in field where needed \n");
@@ -123,7 +158,7 @@ public class SaleController {
     }
 
     private java.sql.Date stringToSqlDate(String stringDate) throws ParseException {
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MM-yyyy");
         java.util.Date utilDate = simpleDateFormat.parse(stringDate);
         return new java.sql.Date(Objects.requireNonNull(utilDate).getTime());
     }

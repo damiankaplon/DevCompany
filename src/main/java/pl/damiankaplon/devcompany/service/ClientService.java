@@ -59,7 +59,7 @@ public class ClientService {
     }
 
     public void updateClient(Client client) throws ManySamePeselsInDb, NotSpecifiedReqArgs {
-        if (client.getPesel().isBlank() || client.getPesel().isBlank()) throw new NotSpecifiedReqArgs();
+        if (client.getPesel().isEmpty() || client.getName().isBlank() || client.getSurname().isBlank()) throw new NotSpecifiedReqArgs();
 
         this.prepareCriteria();
 

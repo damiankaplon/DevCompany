@@ -4,6 +4,7 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import pl.damiankaplon.devcompany.model.Flat;
 import pl.damiankaplon.devcompany.service.exception.FlatAlreadySoldException;
+import pl.damiankaplon.devcompany.service.exception.NoSuchFlat;
 
 import javax.persistence.NoResultException;
 import javax.persistence.criteria.CriteriaBuilder;
@@ -24,17 +25,21 @@ public class FlatService {
         this.sessionFactory = sessionFactory;
     }
 
-    public Flat getFlat(Flat flat) throws NoResultException {
+    public Flat getFlat(Flat flat) throws NoSuchFlat {
         this.prepareCriteria();
         Predicate predicateFlatNumber = cb.equal(root.get("flatNumber"), flat.getFlatNumber());
         Predicate predicateBuilding = cb.equal(root.get("building"), flat.getBuilding());
         this.cq.where(predicateBuilding, predicateFlatNumber);
-        Flat resultFlat = this.session.createQuery(this.cq).getSingleResult();
-        this.session.close();
-        return resultFlat;
+        try{
+            Flat resultFlat = this.session.createQuery(this.cq).getSingleResult();
+            this.session.close();
+            return resultFlat;
+        } catch (NoResultException e) {
+            throw new NoSuchFlat();
+        }
     }
 
-    public void update(Flat flat) throws FlatAlreadySoldException {
+    public void update(Flat flat) throws FlatAlreadySoldException, NoSuchFlat {
         if (checkIfSold(flat)) throw new FlatAlreadySoldException();
         this.session = this.sessionFactory.openSession();
         this.session.beginTransaction();
@@ -43,7 +48,7 @@ public class FlatService {
         this.session.close();
     }
 
-    public boolean checkIfSold(Flat flat) {
+    public boolean checkIfSold(Flat flat) throws NoSuchFlat {
         Flat flatFromDb = getFlat(flat);
         return !Objects.isNull(flatFromDb.getSale());
     }

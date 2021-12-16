@@ -36,4 +36,11 @@ public class Client {
         this.surname = surname;
         this.pesel = pesel;
     }
+
+    @Override
+    public String toString() {
+        return  name +
+                surname +
+                pesel;
+    }
 }
