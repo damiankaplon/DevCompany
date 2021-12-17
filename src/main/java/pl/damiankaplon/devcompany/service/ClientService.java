@@ -63,13 +63,13 @@ public class ClientService {
 
         this.prepareCriteria();
 
-        this.cq.select(root).where(cb.or((cb.equal(root.get("surname"), client.getSurname())),
-                (cb.equal(root.get("pesel"), client.getPesel()))));
+        this.cq.select(root).where(cb.equal(root.get("pesel"), client.getPesel()));
 
         List<Client> clients = this.session.createQuery(this.cq).getResultList();
         this.session.close();
 
         if(clients.size() > 1) throw new ManySamePeselsInDb();
+
         this.update(new Client(clients.get(0).getId(), client.getName(), client.getSurname(), client.getPesel()));
     }
 

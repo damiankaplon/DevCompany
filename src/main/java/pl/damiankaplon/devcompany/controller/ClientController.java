@@ -1,6 +1,7 @@
 package pl.damiankaplon.devcompany.controller;
 
 import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -30,6 +31,8 @@ public class ClientController implements Initializable {
     @FXML private TableColumn<Client, String> nameColumn, surnameColumn, peselColumn;
     @FXML private TableView<Client> clientsTable;
     ObservableList<Client> clientsFX;
+    ObservableList<Client> selectedItems;
+    TableView.TableViewSelectionModel<Client> selectionModel;
 
 
     @FXML
@@ -42,7 +45,6 @@ public class ClientController implements Initializable {
             this.clientTextArea.appendText("Please specify all values to add client \n");
         } finally {
             this.refreshClientGrid();
-            this.clientsTable.refresh();
         }
     }
 
@@ -73,19 +75,31 @@ public class ClientController implements Initializable {
     private void refreshClientGrid() {
         List<Client> clients = service.getAllClients();
         this.clientsFX = FXCollections.observableList(clients);
-        nameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
-        surnameColumn.setCellValueFactory(new PropertyValueFactory<>("surname"));
-        peselColumn.setCellValueFactory(new PropertyValueFactory<>("pesel"));
-        clientsTable.setItems(this.clientsFX);
+        this.clientsTable.setItems(this.clientsFX);
         this.clientsTable.refresh();
     }
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        this.nameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
+        this.surnameColumn.setCellValueFactory(new PropertyValueFactory<>("surname"));
+        this.peselColumn.setCellValueFactory(new PropertyValueFactory<>("pesel"));
         this.refreshClientGrid();
-        nameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
-        surnameColumn.setCellValueFactory(new PropertyValueFactory<>("surname"));
-        peselColumn.setCellValueFactory(new PropertyValueFactory<>("pesel"));
-        clientsTable.setItems(this.clientsFX);
+        this.selectionModel = this.clientsTable.getSelectionModel();
+        this.selectionModel.setSelectionMode(SelectionMode.SINGLE);
+        this.selectedItems = this.selectionModel.getSelectedItems();
+        addListenerToTable();
+    }
+
+    private void addListenerToTable(){
+        this.selectedItems.addListener((ListChangeListener<Client>) change -> {
+            if (!selectedItems.isEmpty()) {
+                ObservableList<? extends Client> clients = change.getList();
+                Client client = clients.get(0);
+                name.setText(client.getName());
+                surname.setText(client.getSurname());
+                pesel.setText(client.getPesel());
+            }
+        });
     }
 }

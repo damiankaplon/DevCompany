@@ -63,9 +63,6 @@ public class SaleController {
             });
         } catch (NoClientsFound e) {
             this.textAreaFX.appendText("There is no such client \n");
-            //} catch (NotSpecifiedReqArgs e) {
-            //    this.textAreaFX.appendText("To search by client properties you have to specify pesel or surname and name, at least \n");
-            // }
         }
     }
 
