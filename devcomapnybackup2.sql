@@ -5,8 +5,6 @@
 -- Dumped from database version 12.9 (Ubuntu 12.9-0ubuntu0.20.04.1)
 -- Dumped by pg_dump version 12.9 (Ubuntu 12.9-0ubuntu0.20.04.1)
 
--- Started on 2021-12-14 20:38:22 CET
-
 SET statement_timeout = 0;
 SET lock_timeout = 0;
 SET idle_in_transaction_session_timeout = 0;
@@ -23,7 +21,41 @@ SET default_tablespace = '';
 SET default_table_access_method = heap;
 
 --
--- TOC entry 202 (class 1259 OID 16385)
+-- Name: auth; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.auth (
+    login character varying[] NOT NULL,
+    password character varying[] NOT NULL,
+    i integer NOT NULL
+);
+
+
+ALTER TABLE public.auth OWNER TO postgres;
+
+--
+-- Name: auth_i_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.auth_i_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.auth_i_seq OWNER TO postgres;
+
+--
+-- Name: auth_i_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.auth_i_seq OWNED BY public.auth.i;
+
+
+--
 -- Name: buildings; Type: TABLE; Schema: public; Owner: postgres
 --
 
@@ -39,7 +71,6 @@ CREATE TABLE public.buildings (
 ALTER TABLE public.buildings OWNER TO postgres;
 
 --
--- TOC entry 203 (class 1259 OID 16388)
 -- Name: buildings_building_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
 --
 
@@ -55,8 +86,6 @@ CREATE SEQUENCE public.buildings_building_id_seq
 ALTER TABLE public.buildings_building_id_seq OWNER TO postgres;
 
 --
--- TOC entry 3086 (class 0 OID 0)
--- Dependencies: 203
 -- Name: buildings_building_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
 
@@ -64,7 +93,6 @@ ALTER SEQUENCE public.buildings_building_id_seq OWNED BY public.buildings.buildi
 
 
 --
--- TOC entry 204 (class 1259 OID 16390)
 -- Name: buildings_constructions; Type: TABLE; Schema: public; Owner: postgres
 --
 
@@ -79,7 +107,6 @@ CREATE TABLE public.buildings_constructions (
 ALTER TABLE public.buildings_constructions OWNER TO postgres;
 
 --
--- TOC entry 205 (class 1259 OID 16393)
 -- Name: clients; Type: TABLE; Schema: public; Owner: postgres
 --
 
@@ -87,14 +114,15 @@ CREATE TABLE public.clients (
     client_id integer NOT NULL,
     client_name character varying(16),
     client_surname character varying(16) NOT NULL,
-    client_pesel character varying(16) NOT NULL
+    client_pesel character varying(16) NOT NULL,
+    login character varying(16),
+    password character varying(128)
 );
 
 
 ALTER TABLE public.clients OWNER TO postgres;
 
 --
--- TOC entry 206 (class 1259 OID 16396)
 -- Name: clients_client_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
 --
 
@@ -110,8 +138,6 @@ CREATE SEQUENCE public.clients_client_id_seq
 ALTER TABLE public.clients_client_id_seq OWNER TO postgres;
 
 --
--- TOC entry 3087 (class 0 OID 0)
--- Dependencies: 206
 -- Name: clients_client_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
 
@@ -119,7 +145,6 @@ ALTER SEQUENCE public.clients_client_id_seq OWNED BY public.clients.client_id;
 
 
 --
--- TOC entry 207 (class 1259 OID 16398)
 -- Name: constructions; Type: TABLE; Schema: public; Owner: postgres
 --
 
@@ -134,7 +159,6 @@ CREATE TABLE public.constructions (
 ALTER TABLE public.constructions OWNER TO postgres;
 
 --
--- TOC entry 208 (class 1259 OID 16401)
 -- Name: constructions_construction_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
 --
 
@@ -150,8 +174,6 @@ CREATE SEQUENCE public.constructions_construction_id_seq
 ALTER TABLE public.constructions_construction_id_seq OWNER TO postgres;
 
 --
--- TOC entry 3088 (class 0 OID 0)
--- Dependencies: 208
 -- Name: constructions_construction_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
 
@@ -159,7 +181,6 @@ ALTER SEQUENCE public.constructions_construction_id_seq OWNED BY public.construc
 
 
 --
--- TOC entry 209 (class 1259 OID 16403)
 -- Name: flats; Type: TABLE; Schema: public; Owner: postgres
 --
 
@@ -175,7 +196,6 @@ CREATE TABLE public.flats (
 ALTER TABLE public.flats OWNER TO postgres;
 
 --
--- TOC entry 210 (class 1259 OID 16406)
 -- Name: flats_flat_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
 --
 
@@ -191,8 +211,6 @@ CREATE SEQUENCE public.flats_flat_id_seq
 ALTER TABLE public.flats_flat_id_seq OWNER TO postgres;
 
 --
--- TOC entry 3089 (class 0 OID 0)
--- Dependencies: 210
 -- Name: flats_flat_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
 
@@ -200,7 +218,6 @@ ALTER SEQUENCE public.flats_flat_id_seq OWNED BY public.flats.flat_id;
 
 
 --
--- TOC entry 211 (class 1259 OID 16408)
 -- Name: machines; Type: TABLE; Schema: public; Owner: postgres
 --
 
@@ -213,7 +230,6 @@ CREATE TABLE public.machines (
 ALTER TABLE public.machines OWNER TO postgres;
 
 --
--- TOC entry 212 (class 1259 OID 16411)
 -- Name: machines_constructions; Type: TABLE; Schema: public; Owner: postgres
 --
 
@@ -228,7 +244,6 @@ CREATE TABLE public.machines_constructions (
 ALTER TABLE public.machines_constructions OWNER TO postgres;
 
 --
--- TOC entry 213 (class 1259 OID 16414)
 -- Name: machines_machine_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
 --
 
@@ -244,8 +259,6 @@ CREATE SEQUENCE public.machines_machine_id_seq
 ALTER TABLE public.machines_machine_id_seq OWNER TO postgres;
 
 --
--- TOC entry 3090 (class 0 OID 0)
--- Dependencies: 213
 -- Name: machines_machine_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
 
@@ -253,7 +266,6 @@ ALTER SEQUENCE public.machines_machine_id_seq OWNED BY public.machines.machine_i
 
 
 --
--- TOC entry 214 (class 1259 OID 16416)
 -- Name: sales; Type: TABLE; Schema: public; Owner: postgres
 --
 
@@ -271,7 +283,6 @@ CREATE TABLE public.sales (
 ALTER TABLE public.sales OWNER TO postgres;
 
 --
--- TOC entry 215 (class 1259 OID 16419)
 -- Name: sales_sale_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
 --
 
@@ -287,8 +298,6 @@ CREATE SEQUENCE public.sales_sale_id_seq
 ALTER TABLE public.sales_sale_id_seq OWNER TO postgres;
 
 --
--- TOC entry 3091 (class 0 OID 0)
--- Dependencies: 215
 -- Name: sales_sale_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
 
@@ -296,7 +305,6 @@ ALTER SEQUENCE public.sales_sale_id_seq OWNED BY public.sales.sale_id;
 
 
 --
--- TOC entry 216 (class 1259 OID 16421)
 -- Name: workers; Type: TABLE; Schema: public; Owner: postgres
 --
 
@@ -311,7 +319,6 @@ CREATE TABLE public.workers (
 ALTER TABLE public.workers OWNER TO postgres;
 
 --
--- TOC entry 217 (class 1259 OID 16424)
 -- Name: workers_worker_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
 --
 
@@ -327,8 +334,6 @@ CREATE SEQUENCE public.workers_worker_id_seq
 ALTER TABLE public.workers_worker_id_seq OWNER TO postgres;
 
 --
--- TOC entry 3092 (class 0 OID 0)
--- Dependencies: 217
 -- Name: workers_worker_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
 
@@ -336,7 +341,6 @@ ALTER SEQUENCE public.workers_worker_id_seq OWNED BY public.workers.worker_id;
 
 
 --
--- TOC entry 218 (class 1259 OID 16426)
 -- Name: workes_constructions; Type: TABLE; Schema: public; Owner: postgres
 --
 
@@ -351,7 +355,13 @@ CREATE TABLE public.workes_constructions (
 ALTER TABLE public.workes_constructions OWNER TO postgres;
 
 --
--- TOC entry 2880 (class 2604 OID 16429)
+-- Name: auth i; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.auth ALTER COLUMN i SET DEFAULT nextval('public.auth_i_seq'::regclass);
+
+
+--
 -- Name: buildings building_id; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
@@ -359,7 +369,6 @@ ALTER TABLE ONLY public.buildings ALTER COLUMN building_id SET DEFAULT nextval('
 
 
 --
--- TOC entry 2881 (class 2604 OID 16430)
 -- Name: clients client_id; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
@@ -367,7 +376,6 @@ ALTER TABLE ONLY public.clients ALTER COLUMN client_id SET DEFAULT nextval('publ
 
 
 --
--- TOC entry 2882 (class 2604 OID 16431)
 -- Name: constructions construction_id; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
@@ -375,7 +383,6 @@ ALTER TABLE ONLY public.constructions ALTER COLUMN construction_id SET DEFAULT n
 
 
 --
--- TOC entry 2883 (class 2604 OID 16432)
 -- Name: flats flat_id; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
@@ -383,7 +390,6 @@ ALTER TABLE ONLY public.flats ALTER COLUMN flat_id SET DEFAULT nextval('public.f
 
 
 --
--- TOC entry 2884 (class 2604 OID 16433)
 -- Name: machines machine_id; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
@@ -391,7 +397,6 @@ ALTER TABLE ONLY public.machines ALTER COLUMN machine_id SET DEFAULT nextval('pu
 
 
 --
--- TOC entry 2885 (class 2604 OID 16434)
 -- Name: sales sale_id; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
@@ -399,7 +404,6 @@ ALTER TABLE ONLY public.sales ALTER COLUMN sale_id SET DEFAULT nextval('public.s
 
 
 --
--- TOC entry 2886 (class 2604 OID 16435)
 -- Name: workers worker_id; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
@@ -407,8 +411,14 @@ ALTER TABLE ONLY public.workers ALTER COLUMN worker_id SET DEFAULT nextval('publ
 
 
 --
--- TOC entry 3064 (class 0 OID 16385)
--- Dependencies: 202
+-- Data for Name: auth; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.auth (login, password, i) FROM stdin;
+\.
+
+
+--
 -- Data for Name: buildings; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
@@ -420,8 +430,6 @@ COPY public.buildings (building_id, bulding_city, building_postal, building_stre
 
 
 --
--- TOC entry 3066 (class 0 OID 16390)
--- Dependencies: 204
 -- Data for Name: buildings_constructions; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
@@ -433,28 +441,28 @@ COPY public.buildings_constructions (construction_id, building_id, building_star
 
 
 --
--- TOC entry 3067 (class 0 OID 16393)
--- Dependencies: 205
 -- Data for Name: clients; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-COPY public.clients (client_id, client_name, client_surname, client_pesel) FROM stdin;
-3	Natalia	Kaplon	99010604291
-4	Michael	Scott	78665753
-6	Kacper	Padykuła	999999999
-9	Damian	Kapłon	8899221144
-2	Damian	NieKapłon	99010604391
-1	Wojciech	NieKapłon	94020224382
-10	Maciej	XD	1232412235
-11	dasda	asdasd	123412425
-12	Andrzej	Wajda	22013502222
-13	Harry	Potter	9312
+COPY public.clients (client_id, client_name, client_surname, client_pesel, login, password) FROM stdin;
+14	Dimitry	Glukhovsky	10987654321	\N	\N
+12	Andrzej	Wajdaaa	22013502222	\N	\N
+2	Damian	Kapłon	99010604391	\N	\N
+10	Maciej	Zawad	12324122352	\N	\N
+1	Damian	NieKapłon	9901060451	\N	\N
+3	Natalia	Kapłon	99010604291	\N	\N
+9	Kapłon	Damian	88992211444	\N	\N
+15	Nikodem	Owsiuk	10234567890	\N	\N
+16	Nikodem	Dowcipnik	10234567892	\N	\N
+17	Bartek	Nowak	21212121211	\N	\N
+13	Bartek	Bartek	12345678910	admin	$2a$12$5MhgtjLD4eJtWUU/R3vYLuaxMCuDIWVuLqwe2GLjE3UT3ihBSSPwq
+4	Michael	Scott	78665753998	\N	\N
+18	Jim	Halpert	7812118971	\N	\N
+6	Kacper	Padykuła	99999999999	khawirar	$2a$12$Rf4GrM0g3YQmi/3T/ld6MOdRs3/O.L7M.NQ9SHhQHdtrwLhCL7EWS
 \.
 
 
 --
--- TOC entry 3069 (class 0 OID 16398)
--- Dependencies: 207
 -- Data for Name: constructions; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
@@ -466,8 +474,6 @@ COPY public.constructions (construction_id, construction_name, construction_city
 
 
 --
--- TOC entry 3071 (class 0 OID 16403)
--- Dependencies: 209
 -- Data for Name: flats; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
@@ -475,7 +481,6 @@ COPY public.flats (flat_id, client_id, building_id, flat_number, sale_id) FROM s
 11	\N	2	31	\N
 8	\N	1	1	1
 19	\N	2	1	14
-24	\N	1	7	\N
 26	\N	1	9	\N
 27	\N	1	10	\N
 28	\N	1	11	\N
@@ -487,12 +492,11 @@ COPY public.flats (flat_id, client_id, building_id, flat_number, sale_id) FROM s
 23	\N	1	6	\N
 25	\N	1	8	23
 31	\N	2	3	24
+24	\N	1	7	25
 \.
 
 
 --
--- TOC entry 3073 (class 0 OID 16408)
--- Dependencies: 211
 -- Data for Name: machines; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
@@ -504,8 +508,6 @@ COPY public.machines (machine_id, machine_reg) FROM stdin;
 
 
 --
--- TOC entry 3074 (class 0 OID 16411)
--- Dependencies: 212
 -- Data for Name: machines_constructions; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
@@ -516,8 +518,6 @@ COPY public.machines_constructions (construction_id, machine_id, machine_start, 
 
 
 --
--- TOC entry 3076 (class 0 OID 16416)
--- Dependencies: 214
 -- Data for Name: sales; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
@@ -525,18 +525,16 @@ COPY public.sales (sale_id, building_id, client_id, sale_value, sale_assign_date
 1	1	1	400000	2021-12-02	2021-12-03	02/12/2021/0001
 13	1	3	300000	2021-12-12	2021-12-12	12/12/2021/0003
 14	2	3	500000	2021-12-12	2021-12-12	12/12/2021/0012
-15	1	9	300000	2021-12-13	2021-12-13	13/12/2021/0001
 16	1	9	300000	2021-12-13	2021-12-13	13/12/2021/0002
 17	1	3	632000	2021-12-02	2021-12-02	02/12/2021/1288
 20	1	13	799999	2021-12-14	2021-12-14	14/12/2021/0003
 23	1	13	799999	2021-12-14	2021-12-14	14/12/2021/0102
 24	2	13	345345	2021-12-14	2021-12-14	14/12/2021/0105
+25	1	6	450999.99	2021-12-19	2021-12-21	19/12/2021/0001
 \.
 
 
 --
--- TOC entry 3078 (class 0 OID 16421)
--- Dependencies: 216
 -- Data for Name: workers; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
@@ -545,8 +543,6 @@ COPY public.workers (worker_id, worker_name, worker_surname, worker_pesel) FROM 
 
 
 --
--- TOC entry 3080 (class 0 OID 16426)
--- Dependencies: 218
 -- Data for Name: workes_constructions; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
@@ -555,8 +551,13 @@ COPY public.workes_constructions (construction_id, worker_id, worker_start, work
 
 
 --
--- TOC entry 3093 (class 0 OID 0)
--- Dependencies: 203
+-- Name: auth_i_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.auth_i_seq', 1, false);
+
+
+--
 -- Name: buildings_building_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
@@ -564,17 +565,13 @@ SELECT pg_catalog.setval('public.buildings_building_id_seq', 4, true);
 
 
 --
--- TOC entry 3094 (class 0 OID 0)
--- Dependencies: 206
 -- Name: clients_client_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('public.clients_client_id_seq', 13, true);
+SELECT pg_catalog.setval('public.clients_client_id_seq', 18, true);
 
 
 --
--- TOC entry 3095 (class 0 OID 0)
--- Dependencies: 208
 -- Name: constructions_construction_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
@@ -582,8 +579,6 @@ SELECT pg_catalog.setval('public.constructions_construction_id_seq', 3, true);
 
 
 --
--- TOC entry 3096 (class 0 OID 0)
--- Dependencies: 210
 -- Name: flats_flat_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
@@ -591,8 +586,6 @@ SELECT pg_catalog.setval('public.flats_flat_id_seq', 33, true);
 
 
 --
--- TOC entry 3097 (class 0 OID 0)
--- Dependencies: 213
 -- Name: machines_machine_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
@@ -600,17 +593,13 @@ SELECT pg_catalog.setval('public.machines_machine_id_seq', 3, true);
 
 
 --
--- TOC entry 3098 (class 0 OID 0)
--- Dependencies: 215
 -- Name: sales_sale_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('public.sales_sale_id_seq', 24, true);
+SELECT pg_catalog.setval('public.sales_sale_id_seq', 25, true);
 
 
 --
--- TOC entry 3099 (class 0 OID 0)
--- Dependencies: 217
 -- Name: workers_worker_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
@@ -618,7 +607,14 @@ SELECT pg_catalog.setval('public.workers_worker_id_seq', 1, false);
 
 
 --
--- TOC entry 2889 (class 2606 OID 16437)
+-- Name: auth auth_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.auth
+    ADD CONSTRAINT auth_pkey PRIMARY KEY (i);
+
+
+--
 -- Name: buildings pk_buildings; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -627,7 +623,6 @@ ALTER TABLE ONLY public.buildings
 
 
 --
--- TOC entry 2894 (class 2606 OID 16439)
 -- Name: buildings_constructions pk_buildings_constructions; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -636,7 +631,6 @@ ALTER TABLE ONLY public.buildings_constructions
 
 
 --
--- TOC entry 2897 (class 2606 OID 16441)
 -- Name: clients pk_clients; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -645,7 +639,6 @@ ALTER TABLE ONLY public.clients
 
 
 --
--- TOC entry 2900 (class 2606 OID 16443)
 -- Name: constructions pk_constructions; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -654,7 +647,6 @@ ALTER TABLE ONLY public.constructions
 
 
 --
--- TOC entry 2905 (class 2606 OID 16445)
 -- Name: flats pk_flats; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -663,7 +655,6 @@ ALTER TABLE ONLY public.flats
 
 
 --
--- TOC entry 2908 (class 2606 OID 16447)
 -- Name: machines pk_machines; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -672,7 +663,6 @@ ALTER TABLE ONLY public.machines
 
 
 --
--- TOC entry 2913 (class 2606 OID 16449)
 -- Name: machines_constructions pk_machines_constructions; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -681,7 +671,6 @@ ALTER TABLE ONLY public.machines_constructions
 
 
 --
--- TOC entry 2917 (class 2606 OID 16451)
 -- Name: sales pk_sales; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -690,7 +679,6 @@ ALTER TABLE ONLY public.sales
 
 
 --
--- TOC entry 2920 (class 2606 OID 16453)
 -- Name: workers pk_workers; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -699,7 +687,6 @@ ALTER TABLE ONLY public.workers
 
 
 --
--- TOC entry 2924 (class 2606 OID 16455)
 -- Name: workes_constructions pk_workes_constructions; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -708,7 +695,6 @@ ALTER TABLE ONLY public.workes_constructions
 
 
 --
--- TOC entry 2890 (class 1259 OID 16456)
 -- Name: building_c_fk; Type: INDEX; Schema: public; Owner: postgres
 --
 
@@ -716,7 +702,6 @@ CREATE INDEX building_c_fk ON public.buildings_constructions USING btree (buildi
 
 
 --
--- TOC entry 2891 (class 1259 OID 16457)
 -- Name: building_c_pk; Type: INDEX; Schema: public; Owner: postgres
 --
 
@@ -724,7 +709,6 @@ CREATE UNIQUE INDEX building_c_pk ON public.buildings_constructions USING btree 
 
 
 --
--- TOC entry 2901 (class 1259 OID 16458)
 -- Name: buildings_flats_fk; Type: INDEX; Schema: public; Owner: postgres
 --
 
@@ -732,7 +716,6 @@ CREATE INDEX buildings_flats_fk ON public.flats USING btree (building_id);
 
 
 --
--- TOC entry 2887 (class 1259 OID 16459)
 -- Name: buildings_pk; Type: INDEX; Schema: public; Owner: postgres
 --
 
@@ -740,7 +723,6 @@ CREATE UNIQUE INDEX buildings_pk ON public.buildings USING btree (building_id);
 
 
 --
--- TOC entry 2914 (class 1259 OID 16460)
 -- Name: buildings_sales_fk; Type: INDEX; Schema: public; Owner: postgres
 --
 
@@ -748,7 +730,6 @@ CREATE INDEX buildings_sales_fk ON public.sales USING btree (building_id);
 
 
 --
--- TOC entry 2902 (class 1259 OID 16461)
 -- Name: clients_flats_fk; Type: INDEX; Schema: public; Owner: postgres
 --
 
@@ -756,7 +737,6 @@ CREATE INDEX clients_flats_fk ON public.flats USING btree (client_id);
 
 
 --
--- TOC entry 2895 (class 1259 OID 16462)
 -- Name: clients_pk; Type: INDEX; Schema: public; Owner: postgres
 --
 
@@ -764,7 +744,6 @@ CREATE UNIQUE INDEX clients_pk ON public.clients USING btree (client_id);
 
 
 --
--- TOC entry 2915 (class 1259 OID 16463)
 -- Name: clients_sales_fk; Type: INDEX; Schema: public; Owner: postgres
 --
 
@@ -772,7 +751,6 @@ CREATE INDEX clients_sales_fk ON public.sales USING btree (client_id);
 
 
 --
--- TOC entry 2892 (class 1259 OID 16464)
 -- Name: construction_b_fk; Type: INDEX; Schema: public; Owner: postgres
 --
 
@@ -780,7 +758,6 @@ CREATE INDEX construction_b_fk ON public.buildings_constructions USING btree (co
 
 
 --
--- TOC entry 2909 (class 1259 OID 16465)
 -- Name: construction_fk; Type: INDEX; Schema: public; Owner: postgres
 --
 
@@ -788,7 +765,6 @@ CREATE INDEX construction_fk ON public.machines_constructions USING btree (const
 
 
 --
--- TOC entry 2910 (class 1259 OID 16466)
 -- Name: construction_pk; Type: INDEX; Schema: public; Owner: postgres
 --
 
@@ -796,7 +772,6 @@ CREATE UNIQUE INDEX construction_pk ON public.machines_constructions USING btree
 
 
 --
--- TOC entry 2922 (class 1259 OID 16467)
 -- Name: construction_w_pk; Type: INDEX; Schema: public; Owner: postgres
 --
 
@@ -804,7 +779,6 @@ CREATE UNIQUE INDEX construction_w_pk ON public.workes_constructions USING btree
 
 
 --
--- TOC entry 2898 (class 1259 OID 16468)
 -- Name: constructions_pk; Type: INDEX; Schema: public; Owner: postgres
 --
 
@@ -812,7 +786,6 @@ CREATE UNIQUE INDEX constructions_pk ON public.constructions USING btree (constr
 
 
 --
--- TOC entry 2903 (class 1259 OID 16469)
 -- Name: flats_pk; Type: INDEX; Schema: public; Owner: postgres
 --
 
@@ -820,7 +793,6 @@ CREATE UNIQUE INDEX flats_pk ON public.flats USING btree (flat_id);
 
 
 --
--- TOC entry 2911 (class 1259 OID 16471)
 -- Name: machine_fk; Type: INDEX; Schema: public; Owner: postgres
 --
 
@@ -828,7 +800,6 @@ CREATE INDEX machine_fk ON public.machines_constructions USING btree (machine_id
 
 
 --
--- TOC entry 2906 (class 1259 OID 16472)
 -- Name: machines_pk; Type: INDEX; Schema: public; Owner: postgres
 --
 
@@ -836,7 +807,6 @@ CREATE UNIQUE INDEX machines_pk ON public.machines USING btree (machine_id);
 
 
 --
--- TOC entry 2918 (class 1259 OID 16473)
 -- Name: sales_pk; Type: INDEX; Schema: public; Owner: postgres
 --
 
@@ -844,7 +814,6 @@ CREATE UNIQUE INDEX sales_pk ON public.sales USING btree (sale_id);
 
 
 --
--- TOC entry 2925 (class 1259 OID 16474)
 -- Name: worker_fk; Type: INDEX; Schema: public; Owner: postgres
 --
 
@@ -852,7 +821,6 @@ CREATE INDEX worker_fk ON public.workes_constructions USING btree (worker_id);
 
 
 --
--- TOC entry 2926 (class 1259 OID 16475)
 -- Name: workers_fk; Type: INDEX; Schema: public; Owner: postgres
 --
 
@@ -860,7 +828,6 @@ CREATE INDEX workers_fk ON public.workes_constructions USING btree (construction
 
 
 --
--- TOC entry 2921 (class 1259 OID 16476)
 -- Name: workers_pk; Type: INDEX; Schema: public; Owner: postgres
 --
 
@@ -868,7 +835,6 @@ CREATE UNIQUE INDEX workers_pk ON public.workers USING btree (worker_id);
 
 
 --
--- TOC entry 2927 (class 2606 OID 16477)
 -- Name: buildings_constructions fk_building_buildings_building; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -877,7 +843,6 @@ ALTER TABLE ONLY public.buildings_constructions
 
 
 --
--- TOC entry 2928 (class 2606 OID 16482)
 -- Name: buildings_constructions fk_building_construct_construc; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -886,7 +851,6 @@ ALTER TABLE ONLY public.buildings_constructions
 
 
 --
--- TOC entry 2929 (class 2606 OID 16487)
 -- Name: flats fk_flats_buildings_building; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -895,7 +859,6 @@ ALTER TABLE ONLY public.flats
 
 
 --
--- TOC entry 2930 (class 2606 OID 16492)
 -- Name: flats fk_flats_clients_f_clients; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -904,7 +867,6 @@ ALTER TABLE ONLY public.flats
 
 
 --
--- TOC entry 2932 (class 2606 OID 16497)
 -- Name: machines_constructions fk_machines_construct_construc; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -913,7 +875,6 @@ ALTER TABLE ONLY public.machines_constructions
 
 
 --
--- TOC entry 2933 (class 2606 OID 16502)
 -- Name: machines_constructions fk_machines_machines__machines; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -922,7 +883,6 @@ ALTER TABLE ONLY public.machines_constructions
 
 
 --
--- TOC entry 2934 (class 2606 OID 16507)
 -- Name: sales fk_sales_buildings_building; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -931,7 +891,6 @@ ALTER TABLE ONLY public.sales
 
 
 --
--- TOC entry 2935 (class 2606 OID 16512)
 -- Name: sales fk_sales_clients_s_clients; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -940,7 +899,6 @@ ALTER TABLE ONLY public.sales
 
 
 --
--- TOC entry 2936 (class 2606 OID 16522)
 -- Name: workes_constructions fk_workes_c_construci_construc; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -949,7 +907,6 @@ ALTER TABLE ONLY public.workes_constructions
 
 
 --
--- TOC entry 2937 (class 2606 OID 16527)
 -- Name: workes_constructions fk_workes_c_workers_w_workers; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -958,7 +915,6 @@ ALTER TABLE ONLY public.workes_constructions
 
 
 --
--- TOC entry 2931 (class 2606 OID 16532)
 -- Name: flats one_sale_many_flats; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -966,9 +922,6 @@ ALTER TABLE ONLY public.flats
     ADD CONSTRAINT one_sale_many_flats FOREIGN KEY (sale_id) REFERENCES public.sales(sale_id);
 
 
--- Completed on 2021-12-14 20:38:22 CET
-
 --
 -- PostgreSQL database dump complete
 --
-
