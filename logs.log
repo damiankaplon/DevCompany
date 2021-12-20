@@ -1,0 +1,11 @@
+2021-12-20 10:59:58.933 [main] INFO  org.hibernate.Version - HHH000412: Hibernate ORM core version [WORKING]
+2021-12-20 10:59:59.294 [main] INFO  org.hibernate.annotations.common.Version - HCANN000001: Hibernate Commons Annotations {5.1.0.Final}
+2021-12-20 10:59:59.355 [main] WARN  org.hibernate.orm.connections.pooling - HHH10001002: Using Hibernate built-in connection pool (not for production use!)
+2021-12-20 10:59:59.359 [main] INFO  org.hibernate.orm.connections.pooling - HHH10001005: using driver [org.postgresql.Driver] at URL [jdbc:postgresql://localhost:5432/devcompany]
+2021-12-20 10:59:59.360 [main] INFO  org.hibernate.orm.connections.pooling - HHH10001001: Connection properties: {password=****, user=postgres}
+2021-12-20 10:59:59.360 [main] INFO  org.hibernate.orm.connections.pooling - HHH10001003: Autocommit mode: false
+2021-12-20 10:59:59.362 [main] INFO  org.hibernate.engine.jdbc.connections.internal.DriverManagerConnectionProviderImpl - HHH000115: Hibernate connection pool size: 1 (min=1)
+2021-12-20 10:59:59.588 [main] INFO  org.hibernate.dialect.Dialect - HHH000400: Using dialect: org.hibernate.dialect.PostgreSQLDialect
+2021-12-20 11:00:00.257 [main] INFO  org.hibernate.engine.transaction.jta.platform.internal.JtaPlatformInitiator - HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+2021-12-20 11:00:00.265 [main] INFO  pl.damiankaplon.devcompany.dbutil.DbUtil - Hibernate successfully configured!
+2021-12-20 11:00:00.801 [JavaFX Application Thread] INFO  pl.damiankaplon.devcompany.MainApplication - App started

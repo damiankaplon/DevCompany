@@ -7,6 +7,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import pl.damiankaplon.devcompany.MainApplication;
 import pl.damiankaplon.devcompany.dbutil.DbUtil;
 import pl.damiankaplon.devcompany.model.Client;
 import pl.damiankaplon.devcompany.service.ClientService;
@@ -37,12 +38,16 @@ public class ClientController implements Initializable {
 
     @FXML
     public void addClient(){
+        MainApplication.logger.debug("addClient invoked");
         try {
             service.saveClient(new Client(name.getText(), surname.getText(), pesel.getText()));
+            MainApplication.logger.debug("addClient method success");
         } catch (PeselAlreadyInDb e) {
             this.clientTextArea.appendText("PESEL is already occupied \n");
+            MainApplication.logger.debug("addClient method failed");
         } catch (NotSpecifiedAllArguments notSpecifiedAllArguments) {
             this.clientTextArea.appendText("Please specify all values to add client \n");
+            MainApplication.logger.debug("addClient method failed");
         } finally {
             this.refreshClientGrid();
         }

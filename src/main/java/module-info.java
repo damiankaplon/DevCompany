@@ -17,6 +17,7 @@ module pl.damiankaplon.devcompany {
     requires org.postgresql.jdbc;
     requires org.hibernate.orm.core;
     requires org.hibernate.commons.annotations;
+    requires org.apache.logging.log4j;
 
     opens pl.damiankaplon.devcompany to javafx.fxml;
     opens pl.damiankaplon.devcompany.model to org.hibernate.orm.core;
